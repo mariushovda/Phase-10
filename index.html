@@ -13,7 +13,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    .app{max-width:760px;margin:0 auto;min-height:100vh;padding:16px 14px 90px}
+    .app{max-width:1080px;margin:0 auto;min-height:100vh;padding:clamp(10px,2vw,20px) clamp(10px,2vw,20px) 96px}
     header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
     h1{font-size:26px;margin:0} h2{font-size:20px;margin:0 0 12px} h3{margin:0 0 6px}
     .sub{color:var(--muted);font-size:14px}
@@ -29,8 +29,8 @@
     .players{display:grid;gap:10px}.player-edit{display:flex;gap:8px;align-items:center}.player-edit span{flex:1;font-weight:700}
     .switch{display:flex;align-items:center;gap:10px}.switch input{width:22px;height:22px}
     .phase-list{display:grid;gap:8px}.phase-item{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
-    .phase-content{flex:1;min-width:0}.phase-text{font-weight:700;line-height:1.3}.phase-visual{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;margin-top:8px;overflow-x:auto;padding:2px 2px 7px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}.phase-group{display:inline-flex;flex:0 0 auto;gap:4px;align-items:center;white-space:nowrap}
-    .card-chip{width:38px;height:54px;padding:3px;border:2px solid rgba(17,24,39,.28);border-radius:8px;display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 2px 5px rgba(0,0,0,.14);text-transform:lowercase;overflow:hidden}
+    .phase-content{flex:1;min-width:0}.phase-text{font-weight:700;line-height:1.3}.phase-visual{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;margin-top:8px;overflow-x:auto;max-width:100%;padding:2px 2px 7px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}.phase-group{display:inline-flex;flex:0 0 auto;gap:4px;align-items:center;white-space:nowrap}
+    .card-chip{width:clamp(32px,7vw,42px);height:clamp(46px,10vw,58px);padding:3px;border:2px solid rgba(17,24,39,.28);border-radius:8px;display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 2px 5px rgba(0,0,0,.14);text-transform:lowercase;overflow:hidden}
     .card-face{width:100%;height:100%;display:grid;place-items:center;border-radius:50% 46%;background:rgba(255,255,255,.93);color:#111827;text-shadow:none}
     .card-chip.any{background:conic-gradient(#ef4444 0 25%,#3b82f6 0 50%,#22c55e 0 75%,#facc15 0 100%);border-color:#6b7280}
     .card-chip.red{background:#ef4444;color:#fff}.card-chip.blue{background:#3b82f6;color:#fff}.card-chip.green{background:#22c55e;color:#fff}.card-chip.yellow{background:#facc15;color:#111827}
@@ -40,13 +40,13 @@
     .plus{display:grid;place-items:center;flex:0 0 auto;height:46px;padding:0 2px;font-size:22px;font-weight:900;color:#6b7280}.group-gap{display:none}.phase-note{margin-top:6px;font-size:12px;color:var(--muted)}
     .num{display:grid;place-items:center;min-width:30px;height:30px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-weight:800}
     .hidden{display:none!important}
-    .score-grid{display:grid;gap:12px}.score-card{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff}
-    .score-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:13px;font-weight:800;background:#eef2ff;color:#3730a3}
+    .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}.score-card{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff}
+    .score-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.score-top>div{min-width:0;flex:1}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:13px;font-weight:800;background:#eef2ff;color:#3730a3}
     .score-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
     .points{margin-top:10px}.points label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
     .overview{overflow-x:auto}.table{width:100%;border-collapse:collapse;min-width:520px}.table th,.table td{padding:11px 8px;text-align:left;border-bottom:1px solid var(--border)}.table th{font-size:13px;color:var(--muted)}
     .leader{font-weight:800;color:#166534}
-    .round-info{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.starter-box{background:#fef3c7;color:#92400e;border-radius:12px;padding:10px 12px;font-weight:800}.total-points{font-size:20px;font-weight:900;margin-top:4px}.registered{margin-top:10px;padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-weight:700}.edit-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;min-height:230px;margin:18px 0}.podium-place{flex:1;max-width:180px;text-align:center}.podium-block{border-radius:16px 16px 8px 8px;padding:14px 8px;font-weight:900;display:flex;align-items:flex-start;justify-content:center}.podium-1 .podium-block{height:150px;background:#fde68a;color:#854d0e}.podium-2 .podium-block{height:110px;background:#e5e7eb;color:#374151}.podium-3 .podium-block{height:80px;background:#fed7aa;color:#9a3412}.podium-name{font-weight:900;margin-bottom:8px}.result-list{display:grid;gap:8px}.result-row{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px}.wake-active{background:#dcfce7!important;color:#166534!important}
+    .round-info{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.starter-box{background:#fef3c7;color:#92400e;border-radius:12px;padding:10px 12px;font-weight:800}.total-points{font-size:20px;font-weight:900;margin-top:4px}.registered{margin-top:10px;padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-weight:700}.round-complete-hint{margin-top:12px;padding:11px 12px;border-radius:12px;background:#dcfce7;color:#166534;font-weight:800;text-align:center}.edit-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;min-height:230px;margin:18px 0}.podium-place{flex:1;max-width:180px;text-align:center}.podium-block{border-radius:16px 16px 8px 8px;padding:14px 8px;font-weight:900;display:flex;align-items:flex-start;justify-content:center}.podium-1 .podium-block{height:150px;background:#fde68a;color:#854d0e}.podium-2 .podium-block{height:110px;background:#e5e7eb;color:#374151}.podium-3 .podium-block{height:80px;background:#fed7aa;color:#9a3412}.podium-name{font-weight:900;margin-bottom:8px}.result-list{display:grid;gap:8px}.result-row{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px}.wake-active{background:#dcfce7!important;color:#166534!important}
     .tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:center;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:20}
     .tabs-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(760px,100%)}.tab{background:#f3f4f6;color:#374151}.tab.active{background:#111827;color:#fff}
     .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:30}.toast.show{opacity:1}
@@ -60,7 +60,7 @@
     body.dark .tabs{background:rgba(15,23,42,.96)}
     .pill{border:1px solid var(--border);background:#eef2ff;color:#3730a3;border-radius:999px;padding:8px 11px;font-weight:700;cursor:pointer}
     body.dark .pill{background:#1e293b;color:#e2e8f0}
-    @media (max-width:520px){.score-actions{grid-template-columns:1fr}.row.stack{flex-direction:column;align-items:stretch}.edit-actions{grid-template-columns:1fr}.round-info{grid-template-columns:1fr}.podium{gap:5px}.podium-name{font-size:13px}.podium-block{padding:10px 4px}}
+    @media (max-width:700px){header{align-items:flex-start;flex-direction:column}header>.row{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}header button{padding:10px 6px}.card{padding:14px;border-radius:15px}.score-grid{grid-template-columns:1fr}.score-actions{grid-template-columns:1fr 1fr}.row.stack{flex-direction:column;align-items:stretch}.edit-actions{grid-template-columns:1fr 1fr}.round-info{grid-template-columns:1fr}.podium{gap:5px}.podium-name{font-size:13px}.podium-block{padding:10px 4px}.phase-visual{padding-bottom:9px}.tabs-inner{gap:5px}.tab{padding:11px 6px;font-size:13px}}@media (max-width:390px){.score-actions,.edit-actions{grid-template-columns:1fr}.card-chip{width:31px;height:45px;font-size:16px}.plus{font-size:19px}.total-points{font-size:18px}}
   </style>
 </head>
 <body>
@@ -112,7 +112,7 @@
         <div><h2 style="margin-bottom:4px">Runde <span id="roundNo">1</span></h2><div class="sub">Marker resultatet for hver spiller. Du kan endre eller angre.</div></div>
         <div class="starter-box">Starter: <span id="roundStarter">–</span></div>
       </div>
-      <div class="row" style="justify-content:flex-end;margin-top:12px;flex-wrap:wrap"><button class="danger small" id="finishGameBtn">Avslutt spill</button><button class="btn2 small" id="nextRoundBtn">Neste runde</button></div>
+      <div class="row" style="justify-content:flex-end;margin-top:12px;flex-wrap:wrap"><button class="btn2 small" id="previousRoundBtn">← Tilbake én runde</button><button class="danger small" id="finishGameBtn">Avslutt spill</button><button class="btn small" id="nextRoundBtn">Neste runde</button></div><div id="roundCompleteHint" class="round-complete-hint hidden">Alle er registrert. Går automatisk videre til neste runde.</div>
     </div>
     <div id="scoreGrid" class="score-grid"></div>
   </section>
@@ -239,13 +239,13 @@
     {text:'1 sett med 4 + 1 rekke med 3 + 1 stjernekort', visual:combine(setGroup(4,'a'),runGroup(3,'b',1),starGroup(1))}
   ];
 
-  let state = load() || { players: [], phases: [...classic], gameLength: 10, round: 1, usePoints: true, started: false, visualVersion: 5 };
+  let state = load() || { players: [], phases: [...classic], gameLength: 10, round: 1, usePoints: true, started: false, visualVersion: 7 };
   let archive = loadArchive();
   let savedNames = loadSavedNames();
   let darkMode = localStorage.getItem('phase10_dark_mode') === '1';
   document.body.classList.toggle('dark', darkMode);
   if(!state.gameLength) state.gameLength = state.phases?.length === 5 ? 5 : 10;
-  if(!state.visualVersion || state.visualVersion < 5){ state.phases=[...classic].slice(0,state.gameLength); state.visualVersion=5; }
+  if(!state.visualVersion || state.visualVersion < 7){ state.phases=[...classic].slice(0,state.gameLength); state.visualVersion=7; }
 
   const $ = id => document.getElementById(id);
   const playerName = $('playerName'), playerList = $('playerList'), usePoints = $('usePoints'), phaseMode = $('phaseMode'), gameLength = $('gameLength');
@@ -324,19 +324,28 @@
     const anyDone=state.players.some(p=>(p.phase||0)>=state.phases.length);
     $('finishGameBtn').textContent=anyDone?'Fullfør spill':'Avslutt spill';
     $('finishGameBtn').className=anyDone?'ok small':'danger small';
-    if(!state.players.length){ $('scoreGrid').innerHTML='<div class="empty">Legg til spillere i Oppsett</div>'; return; }
+    if(!state.players.length){ $('scoreGrid').innerHTML='<div class="empty">Legg til spillere i Oppsett</div>'; $('roundCompleteHint').classList.add('hidden'); return; }
     $('scoreGrid').innerHTML=state.players.map((p,i)=>{
-      const total=state.phases.length, phaseIndex=Math.min(p.phase||0,total-1), done=(p.phase||0)>=total;
+      const total=state.phases.length;
       const rr=currentRoundRecord(p);
+      // Når en spiller er registrert i denne runden, viser vi fasen som nettopp ble spilt.
+      // Neste fase vises først etter at brukeren trykker «Neste runde».
+      const phaseIndex=Math.min(rr ? Math.max(0,(rr.phase||1)-1) : (p.phase||0), total-1);
+      const done=(p.phase||0)>=total;
+      const displayDone=done && !rr;
       return `<div class="score-card">
-        <div class="score-top"><div><h3>${escapeHtml(p.name)}</h3><div class="total-points">${state.usePoints?(p.points||0)+' poeng':'Fase '+Math.min((p.phase||0)+1,total)}</div><div class="sub">${done?'Alle faser fullført':'Fase '+(phaseIndex+1)+': '+escapeHtml(state.phases[phaseIndex].text)}</div>${done?'':`<div class="phase-visual">${phaseVisual(state.phases[phaseIndex])}</div>`}</div><span class="badge">${done?'Ferdig':'Fase '+(phaseIndex+1)}</span></div>
-        ${done && !rr?'<div class="ok" style="padding:10px;border-radius:10px;margin-top:12px;font-weight:700">Ferdig med alle '+total+' faser</div>':`
+        <div class="score-top"><div><h3>${escapeHtml(p.name)}</h3><div class="total-points">${state.usePoints?(p.points||0)+' poeng':'Fase '+Math.min((p.phase||0)+1,total)}</div><div class="sub">${displayDone?'Alle faser fullført':'Fase '+(phaseIndex+1)+': '+escapeHtml(state.phases[phaseIndex].text)}</div>${displayDone?'':`<div class="phase-visual">${phaseVisual(state.phases[phaseIndex])}</div>`}</div><span class="badge">${displayDone?'Ferdig':rr?'Registrert fase '+(phaseIndex+1):'Fase '+(phaseIndex+1)}</span></div>
+        ${displayDone?'<div class="ok" style="padding:10px;border-radius:10px;margin-top:12px;font-weight:700">Ferdig med alle '+total+' faser</div>':`
         ${state.usePoints?`<div class="points"><label>Poeng denne runden</label><input type="number" min="0" inputmode="numeric" id="pts-${i}" value="${rr?rr.points:''}" placeholder="0"></div>`:''}
         ${rr && state.editingPlayer!==i?`<div class="registered">Registrert: ${rr.completed?'✓ Fase fullført':'Ikke fullført'}${state.usePoints?' · '+rr.points+' poeng':''}</div>
         <div class="edit-actions"><button class="btn2" data-edit="${i}">Endre</button><button class="danger" data-undo="${i}">Angre registrering</button></div>`:
         `<div class="score-actions"><button class="ok" data-complete="${i}">✓ Fullført fase</button><button class="btn2" data-fail="${i}">Ikke fullført</button>${rr?`<button class="danger" data-cancel-edit="${i}">Avbryt</button>`:''}</div>`}`}
       </div>`;
     }).join('');
+    const allRegistered=state.players.length>0 && state.players.every(p=>!!currentRoundRecord(p));
+    $('roundCompleteHint').classList.toggle('hidden', !allRegistered);
+    $('nextRoundBtn').className=allRegistered?'btn small':'btn2 small';
+    $('previousRoundBtn').classList.toggle('hidden', state.round<=1);
     document.querySelectorAll('[data-complete]').forEach(b=>b.onclick=()=>record(+b.dataset.complete,true));
     document.querySelectorAll('[data-fail]').forEach(b=>b.onclick=()=>record(+b.dataset.fail,false));
     document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{ state.editingPlayer=+b.dataset.edit; save(); renderAll(); });
@@ -362,7 +371,18 @@
     p.history.push({round:state.round,phase:phaseIndex+1,completed,points:pts});
     state.editingPlayer=null;
     recalculatePlayer(p);
+    const completedRound = state.round;
     save(); renderAll(); toast('Registreringen er lagret');
+
+    // Når siste spiller i runden er registrert, går appen automatisk videre.
+    // En kort forsinkelse gjør at brukeren ser bekreftelsen før neste runde vises.
+    if(state.players.length>0 && state.players.every(player=>!!currentRoundRecord(player))){
+      setTimeout(()=>{
+        if(state.round===completedRound && state.players.every(player=>!!currentRoundRecord(player))){
+          advanceRound(true);
+        }
+      }, 800);
+    }
   }
 
   function undoRecord(i){
@@ -371,6 +391,24 @@
     state.editingPlayer=null;
     recalculatePlayer(p);
     save(); renderAll(); toast('Registreringen er angret');
+  }
+
+
+  function advanceRound(auto=false){
+    state.editingPlayer=null;
+    state.round++;
+    save();
+    renderAll();
+    toast((auto?'Neste runde · ':'')+roundStarter()+' starter');
+  }
+
+  function previousRound(){
+    if(state.round<=1) return;
+    state.editingPlayer=null;
+    state.round--;
+    save();
+    renderAll();
+    toast('Tilbake til runde '+state.round+' – du kan endre registreringene');
   }
 
   function renderOverview(){
@@ -502,19 +540,20 @@
     if(!state.started) state.players.forEach(p=>{p.phase=0;p.points=0;p.history=[];});
     state.started=true; state.round=1; state.usePoints=usePoints.checked; state.gameLength=state.phases.length; save(); tabs.classList.remove('hidden'); showView('gameView'); renderAll();
   });
-  $('nextRoundBtn').addEventListener('click',()=>{ const missing=state.players.filter(p=>!currentRoundRecord(p)); if(missing.length && !confirm('Mangler registrering for: '+missing.map(p=>p.name).join(', ')+'. Gå videre likevel?')) return; state.editingPlayer=null; state.round++; save(); renderAll(); toast(roundStarter()+' starter denne runden'); });
+  $('nextRoundBtn').addEventListener('click',()=>{ const missing=state.players.filter(p=>!currentRoundRecord(p)); if(missing.length && !confirm('Mangler registrering for: '+missing.map(p=>p.name).join(', ')+'. Gå videre likevel?')) return; advanceRound(false); });
+  $('previousRoundBtn').addEventListener('click',previousRound);
   $('finishGameBtn').addEventListener('click',()=>{ const done=state.players.some(p=>(p.phase||0)>=state.phases.length); if(confirm(done?'Fullføre spillet og vise resultatet?':'Avslutte og lagre dette spillet i statistikken?')) finishGame(); });
   $('matchupFilter').addEventListener('change',renderStats);
   $('themeBtn').textContent=darkMode?'Lys':'Mørk';
   $('themeBtn').addEventListener('click',()=>{ darkMode=!darkMode; document.body.classList.toggle('dark',darkMode); localStorage.setItem('phase10_dark_mode',darkMode?'1':'0'); $('themeBtn').textContent=darkMode?'Lys':'Mørk'; });
   $('wakeBtn').addEventListener('click',()=>{ if(wakeLock && !wakeLock.released) releaseWakeLock(); else requestWakeLock(); });
   $('finishStatsBtn').addEventListener('click',()=>showView('statsView'));
-  $('finishNewBtn').addEventListener('click',()=>{ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:6}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); });
+  $('finishNewBtn').addEventListener('click',()=>{ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:7}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); });
   $('importBtn').addEventListener('click',()=>$('importFile').click());
   $('importFile').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f)return; try{ const data=JSON.parse(await f.text()); if(!Array.isArray(data)) throw new Error(); if(confirm('Importere og erstatte eksisterende spillhistorikk?')){ archive=data; saveArchive(); renderStats(); toast('Historikken er importert'); } }catch{ alert('Filen kunne ikke leses.'); } e.target.value=''; });
   $('exportBtn').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(archive,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='phase10-statistikk.json'; a.click(); URL.revokeObjectURL(a.href); });
   $('resetBtn').addEventListener('click',()=>{
-    if(confirm('Starte et helt nytt spill?')){ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:6}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); }
+    if(confirm('Starte et helt nytt spill?')){ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:7}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); }
   });
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.view)));
 
