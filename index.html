@@ -168,23 +168,23 @@
   const gap = () => ({kind:'gap'});
   const setGroup = (count, letter='a', offset=0) => {
     const out=[];
-    for(let i=0;i<count;i++){ if(i) out.push(plus()); out.push(card(letter, 'any')); }
+    for(let i=0;i<count;i++){ out.push(card(letter, 'any')); }
     return out;
   };
   const runGroup = (count, startLetter='a', offset=0) => {
     const out=[]; const base=startLetter.charCodeAt(0);
-    for(let i=0;i<count;i++){ if(i) out.push(plus()); out.push(card(String.fromCharCode(base+i), 'any')); }
+    for(let i=0;i<count;i++){ out.push(card(String.fromCharCode(base+i), 'any')); }
     return out;
   };
   const colorGroup = (count, color='blue', startLetter='a') => {
     const out=[]; const base=startLetter.charCodeAt(0);
-    for(let i=0;i<count;i++){ if(i) out.push(plus()); out.push(card(String.fromCharCode(base+i), color)); }
+    for(let i=0;i<count;i++){ out.push(card(String.fromCharCode(base+i), color)); }
     return out;
   };
   const starGroup = (count=1) => {
-    const out=[]; for(let i=0;i<count;i++){ if(i) out.push(plus()); out.push(star()); } return out;
+    const out=[]; for(let i=0;i<count;i++){ out.push(star()); } return out;
   };
-  const combine = (...groups) => groups.flatMap((g,i)=> i ? [gap(), ...g] : g);
+  const combine = (...groups) => groups.flatMap((g,i)=> i ? [gap(), plus(), gap(), ...g] : g);
 
   const classic = [
     {text:'2 sett med 3', visual:combine(setGroup(3,'a'),setGroup(3,'b',1))},
@@ -221,12 +221,12 @@
     {text:'1 sett med 4 + 1 rekke med 3 + 1 stjernekort', visual:combine(setGroup(4,'a'),runGroup(3,'b',1),starGroup(1))}
   ];
 
-  let state = load() || { players: [], phases: [...classic], round: 1, usePoints: true, started: false, visualVersion: 3 };
+  let state = load() || { players: [], phases: [...classic], round: 1, usePoints: true, started: false, visualVersion: 4 };
   let archive = loadArchive();
   let savedNames = loadSavedNames();
   let darkMode = localStorage.getItem('phase10_dark_mode') === '1';
   document.body.classList.toggle('dark', darkMode);
-  if(!state.visualVersion || state.visualVersion < 3){ state.phases=[...classic]; state.visualVersion=3; }
+  if(!state.visualVersion || state.visualVersion < 4){ state.phases=[...classic]; state.visualVersion=4; }
 
   const $ = id => document.getElementById(id);
   const playerName = $('playerName'), playerList = $('playerList'), usePoints = $('usePoints'), phaseMode = $('phaseMode');
