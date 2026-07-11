@@ -1,566 +1,110 @@
-<!DOCTYPE html>
-<html lang="no">
+<!doctype html>
+<html lang="nb">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <title>Phase Companion</title>
-  <style>
-    :root{
-      --bg:#f3f4f6; --card:#ffffff; --text:#111827; --muted:#6b7280;
-      --primary:#2563eb; --primary2:#1d4ed8; --ok:#16a34a; --danger:#dc2626;
-      --border:#e5e7eb; --shadow:0 8px 24px rgba(0,0,0,.08);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    .app{max-width:1080px;margin:0 auto;min-height:100vh;padding:clamp(10px,2vw,20px) clamp(10px,2vw,20px) 96px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    h1{font-size:26px;margin:0} h2{font-size:20px;margin:0 0 12px} h3{margin:0 0 6px}
-    .sub{color:var(--muted);font-size:14px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
-    .row{display:flex;gap:10px;align-items:center}.row>*{min-width:0}
-    .grow{flex:1}
-    input,select,button{font:inherit}
-    input[type=text],input[type=number],select{width:100%;padding:13px 14px;border:1px solid #d1d5db;border-radius:12px;background:white;font-size:16px}
-    button{border:0;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer;touch-action:manipulation}
-    .btn{background:var(--primary);color:white}.btn:active{background:var(--primary2)}
-    .btn2{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}.ok{background:#dcfce7;color:#166534}
-    .small{padding:9px 11px;font-size:14px}.wide{width:100%}
-    .players{display:grid;gap:10px}.player-edit{display:flex;gap:8px;align-items:center}.player-edit span{flex:1;font-weight:700}
-    .switch{display:flex;align-items:center;gap:10px}.switch input{width:22px;height:22px}
-    .phase-list{display:grid;gap:8px}.phase-item{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
-    .phase-content{flex:1;min-width:0}.phase-text{font-weight:700;line-height:1.3}.phase-visual{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;margin-top:8px;overflow-x:auto;max-width:100%;padding:2px 2px 7px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}.phase-group{display:inline-flex;flex:0 0 auto;gap:4px;align-items:center;white-space:nowrap}
-    .card-chip{width:clamp(32px,7vw,42px);height:clamp(46px,10vw,58px);padding:3px;border:2px solid rgba(17,24,39,.28);border-radius:8px;display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 2px 5px rgba(0,0,0,.14);text-transform:lowercase;overflow:hidden}
-    .card-face{width:100%;height:100%;display:grid;place-items:center;border-radius:50% 46%;background:rgba(255,255,255,.93);color:#111827;text-shadow:none}
-    .card-chip.any{background:conic-gradient(#ef4444 0 25%,#3b82f6 0 50%,#22c55e 0 75%,#facc15 0 100%);border-color:#6b7280}
-    .card-chip.red{background:#ef4444;color:#fff}.card-chip.blue{background:#3b82f6;color:#fff}.card-chip.green{background:#22c55e;color:#fff}.card-chip.yellow{background:#facc15;color:#111827}
-    .card-chip.red .card-face{color:#dc2626}.card-chip.blue .card-face{color:#2563eb}.card-chip.green .card-face{color:#16a34a}.card-chip.yellow .card-face{color:#a16207}
-    .card-chip.star{background:conic-gradient(#ef4444 0 25%,#3b82f6 0 50%,#22c55e 0 75%,#facc15 0 100%);border-color:#f59e0b;font-size:25px;text-transform:none}.card-chip.star .card-face{color:#f59e0b}
-    .phase-legend{margin-top:8px;font-size:12px;color:var(--muted)}
-    .plus{display:grid;place-items:center;flex:0 0 auto;height:46px;padding:0 2px;font-size:22px;font-weight:900;color:#6b7280}.group-gap{display:none}.phase-note{margin-top:6px;font-size:12px;color:var(--muted)}
-    .num{display:grid;place-items:center;min-width:30px;height:30px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-weight:800}
-    .hidden{display:none!important}
-    .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}.score-card{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff}
-    .score-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.score-top>div{min-width:0;flex:1}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:13px;font-weight:800;background:#eef2ff;color:#3730a3}
-    .score-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-    .points{margin-top:10px}.points label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
-    .overview{overflow-x:auto}.table{width:100%;border-collapse:collapse;min-width:520px}.table th,.table td{padding:11px 8px;text-align:left;border-bottom:1px solid var(--border)}.table th{font-size:13px;color:var(--muted)}
-    .leader{font-weight:800;color:#166534}
-    .round-info{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.starter-box{background:#fef3c7;color:#92400e;border-radius:12px;padding:10px 12px;font-weight:800}.total-points{font-size:20px;font-weight:900;margin-top:4px}.registered{margin-top:10px;padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-weight:700}.round-complete-hint{margin-top:12px;padding:11px 12px;border-radius:12px;background:#dcfce7;color:#166534;font-weight:800;text-align:center}.edit-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;min-height:230px;margin:18px 0}.podium-place{flex:1;max-width:180px;text-align:center}.podium-block{border-radius:16px 16px 8px 8px;padding:14px 8px;font-weight:900;display:flex;align-items:flex-start;justify-content:center}.podium-1 .podium-block{height:150px;background:#fde68a;color:#854d0e}.podium-2 .podium-block{height:110px;background:#e5e7eb;color:#374151}.podium-3 .podium-block{height:80px;background:#fed7aa;color:#9a3412}.podium-name{font-weight:900;margin-bottom:8px}.result-list{display:grid;gap:8px}.result-row{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px}.wake-active{background:#dcfce7!important;color:#166534!important}
-    .tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;justify-content:center;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:20}
-    .tabs-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(760px,100%)}.tab{background:#f3f4f6;color:#374151}.tab.active{background:#111827;color:#fff}
-    .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:30}.toast.show{opacity:1}
-    .empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed #cbd5e1;border-radius:12px}
-    .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat-box{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fafafa}.stat-value{font-size:24px;font-weight:900}.stat-label{font-size:12px;color:var(--muted);margin-top:2px}
-    .history-card{border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:10px;background:#fff}.history-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.winner{color:#166534;font-weight:800}.bar-row{display:grid;grid-template-columns:minmax(90px,1fr) 2fr 46px;gap:8px;align-items:center;margin:10px 0}.bar-track{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:#2563eb;border-radius:999px}.filter-row{display:grid;grid-template-columns:1fr auto;gap:8px}.muted-box{background:#f9fafb;border:1px solid var(--border);border-radius:12px;padding:10px}
-    body.dark{--bg:#0f172a;--card:#111827;--text:#f8fafc;--muted:#94a3b8;--border:#334155;--shadow:0 8px 24px rgba(0,0,0,.28)}
-    body.dark input[type=text],body.dark input[type=number],body.dark select{background:#0f172a;color:#f8fafc;border-color:#475569}
-    body.dark .phase-item,body.dark .score-card,body.dark .history-card,body.dark .stat-box,body.dark .muted-box{background:#111827}
-    body.dark .btn2,body.dark .tab{background:#334155;color:#f8fafc}
-    body.dark .tabs{background:rgba(15,23,42,.96)}
-    .pill{border:1px solid var(--border);background:#eef2ff;color:#3730a3;border-radius:999px;padding:8px 11px;font-weight:700;cursor:pointer}
-    body.dark .pill{background:#1e293b;color:#e2e8f0}
-    @media (max-width:700px){header{align-items:flex-start;flex-direction:column}header>.row{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}header button{padding:10px 6px}.card{padding:14px;border-radius:15px}.score-grid{grid-template-columns:1fr}.score-actions{grid-template-columns:1fr 1fr}.row.stack{flex-direction:column;align-items:stretch}.edit-actions{grid-template-columns:1fr 1fr}.round-info{grid-template-columns:1fr}.podium{gap:5px}.podium-name{font-size:13px}.podium-block{padding:10px 4px}.phase-visual{padding-bottom:9px}.tabs-inner{gap:5px}.tab{padding:11px 6px;font-size:13px}}@media (max-width:390px){.score-actions,.edit-actions{grid-template-columns:1fr}.card-chip{width:31px;height:45px;font-size:16px}.plus{font-size:19px}.total-points{font-size:18px}}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Phase Companion v2.2</title>
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div class="app">
-  <header>
-    <div><h1>Phase Companion</h1><div class="sub">Faser, spillere, historikk og statistikk</div></div>
-    <div class="row"><button class="btn2 small" id="wakeBtn" type="button">Skjerm på</button><button class="btn2 small" id="themeBtn" type="button">Mørk</button><button class="btn2 small" id="resetBtn">Nytt spill</button></div>
-  </header>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div><h1>Phase Companion <span>v2.2</span></h1><p id="subtitle">Utvidet fasebibliotek</p></div>
+      <button id="wakeBtn" class="icon-btn" type="button">☀️ Skjerm på</button>
+    </header>
 
-  <section id="setupView">
-    <div class="card">
-      <h2>Spillere</h2>
-      <div class="row stack">
-        <input id="playerName" class="grow" type="text" placeholder="Skriv navn" autocomplete="off" />
-        <button class="btn" id="addPlayerBtn" type="button">Legg til spiller</button>
-      </div>
-      <div id="savedPlayers" class="row" style="flex-wrap:wrap;margin-top:12px"></div><div id="playerList" class="players" style="margin-top:12px"></div>
-    </div>
+    <main>
+      <section id="homeView" class="view active">
+        <div class="hero card">
+          <div class="hero-mark">🎴</div>
+          <h2>Start et nytt spill</h2>
+          <p>Klassisk, balansert tilfeldig, hard eller familie.</p>
+          <button id="newGameBtn" class="btn primary wide">Nytt spill</button>
+          <button id="continueBtn" class="btn secondary wide hidden">Fortsett spill</button>
+        </div>
+        <div class="home-dashboard card">
+          <div class="section-head">
+            <div><h2>Oversikt</h2><p>Statistikk fra spillene som er lagret på denne enheten.</p></div>
+            <button class="btn ghost" data-nav="statsView">Se all statistikk</button>
+          </div>
+          <div id="homeStats" class="stat-grid home-stats"></div>
+          <div id="homeLeader" class="home-leader"></div>
+        </div>
+        <div class="grid two">
+          <button class="menu-card" data-nav="statsView"><strong>📊 Statistikk</strong><span>Seiere, plassering, kombinasjoner og historikk</span></button>
+          <button class="menu-card" data-nav="libraryView"><strong>🃏 Fasebibliotek</strong><span>Se alle faser og vanskelighetsgrad</span></button>
+        </div>
+      </section>
 
-    <div class="card">
-      <h2>Spilloppsett</h2>
-      <div class="switch"><input id="usePoints" type="checkbox" checked><label for="usePoints"><strong>Registrer poeng</strong><br><span class="sub">Slå av for kun faseoversikt</span></label></div>
-      <div style="height:12px"></div>
-      <label class="sub" for="gameLength">Antall faser</label>
-      <select id="gameLength">
-        <option value="10">Vanlig spill – 10 faser</option>
-        <option value="5">Kort spill – 5 faser</option>
-      </select>
-      <div style="height:12px"></div>
-      <label class="sub" for="phaseMode">Type faser</label>
-      <select id="phaseMode">
-        <option value="classic">Klassiske faser</option>
-        <option value="mixed">Blandede faser</option>
-        <option value="random">Tilfeldige faser</option>
-      </select>
-      <div style="height:12px"></div>
-      <button class="btn wide" id="startGameBtn" type="button">Start spill</button>
-    </div>
+      <section id="setupView" class="view">
+        <div class="card">
+          <div class="section-head"><div><h2>Spillere</h2><p>Velg minst to.</p></div></div>
+          <div class="input-row"><input id="playerInput" type="text" placeholder="Navn"><button id="addPlayerBtn" class="btn primary">Legg til</button></div>
+          <div id="savedPlayers" class="chip-wrap"></div>
+          <div id="selectedPlayers" class="stack"></div>
+        </div>
+        <div class="card">
+          <h2>Spilloppsett</h2>
+          <label>Spillmodus<select id="modeSelect"><option value="classic">Klassisk</option><option value="balanced">Balansert tilfeldig</option><option value="hard">Hard</option><option value="family">Familie</option></select></label>
+          <label>Antall faser<select id="lengthSelect"><option value="10">10 faser</option><option value="5">5 faser</option></select></label>
+          <label class="toggle"><input id="pointsToggle" type="checkbox" checked><span>Registrer poeng</span></label>
+          <button id="previewBtn" class="btn secondary wide">Vis valgte faser</button>
+          <button id="startBtn" class="btn primary wide">Start spill</button>
+        </div>
+        <div id="phasePreview" class="card hidden"><h2>Valgte faser</h2><div id="previewList" class="phase-list"></div></div>
+      </section>
 
-    <div class="card">
-      <h2 id="phaseListHeading">Dagens 10 faser</h2>
-      <div class="phase-legend">Flerfarget kort = valgfri farge. Ensfargede kort = alle kort må ha samme farge.</div><div id="setupPhaseList" class="phase-list"></div>
-    </div>
-  </section>
+      <section id="gameView" class="view">
+        <div class="card game-head">
+          <div><div class="eyebrow">RUNDE <span id="roundNo">1</span></div><h2 id="starterText">Starter: –</h2></div>
+          <div class="head-actions"><button id="undoRoundBtn" class="btn ghost">↶ Forrige runde</button><button id="quitBtn" class="btn danger">Avslutt</button></div>
+        </div>
+        <div id="playersGame" class="player-grid"></div>
+      </section>
 
-  <section id="gameView" class="hidden">
-    <div class="card">
-      <div class="round-info">
-        <div><h2 style="margin-bottom:4px">Runde <span id="roundNo">1</span></h2><div class="sub">Marker resultatet for hver spiller. Du kan endre eller angre.</div></div>
-        <div class="starter-box">Starter: <span id="roundStarter">–</span></div>
-      </div>
-      <div class="row" style="justify-content:flex-end;margin-top:12px;flex-wrap:wrap"><button class="btn2 small" id="previousRoundBtn">← Tilbake én runde</button><button class="danger small" id="finishGameBtn">Avslutt spill</button><button class="btn small" id="nextRoundBtn">Neste runde</button></div><div id="roundCompleteHint" class="round-complete-hint hidden">Alle er registrert. Går automatisk videre til neste runde.</div>
-    </div>
-    <div id="scoreGrid" class="score-grid"></div>
-  </section>
+      <section id="finishView" class="view">
+        <div class="card center">
+          <div class="trophy">🏆</div><h2 id="winnerTitle">Vinner</h2><p id="winnerSub"></p>
+          <div id="podium" class="podium"></div>
+          <button id="saveFinishBtn" class="btn primary wide">Fullfør og lagre</button>
+          <button id="newFromFinishBtn" class="btn secondary wide">Nytt spill</button>
+        </div>
+      </section>
 
+      <section id="statsView" class="view">
+        <div class="card"><div class="section-head"><div><h2>Statistikk</h2><p>Lagret lokalt på denne enheten.</p></div><button id="exportBtn" class="btn ghost">Eksporter</button></div><div id="statsSummary" class="stat-grid"></div></div>
+        <div class="card"><h2>Spillere</h2><div id="playerStats"></div></div>
+        <div class="card"><h2>Historikk</h2><div id="historyList"></div></div>
+      </section>
 
-  <section id="finishView" class="hidden">
-    <div class="card">
-      <div style="text-align:center"><div style="font-size:46px">🏆</div><h2 id="finishTitle">Spillet er fullført</h2><div class="sub" id="finishSubtitle"></div></div>
-      <div id="podium" class="podium"></div>
-      <div id="finishResults" class="result-list"></div>
-      <div class="row" style="margin-top:16px;flex-wrap:wrap"><button class="btn grow" id="finishStatsBtn">Se statistikk</button><button class="btn2 grow" id="finishNewBtn">Nytt spill</button></div>
-    </div>
-  </section>
+      <section id="libraryView" class="view">
+        <div class="card">
+          <div class="section-head"><div><h2>Fasebibliotek</h2><p>Alle tilgjengelige faser, gruppert etter vanskelighetsgrad.</p></div><span id="libraryCount" class="count-badge"></span></div>
+          <div class="library-filters" id="libraryFilters">
+            <button class="chip active" data-difficulty="all">Alle</button>
+            <button class="chip" data-difficulty="1">★</button>
+            <button class="chip" data-difficulty="2">★★</button>
+            <button class="chip" data-difficulty="3">★★★</button>
+            <button class="chip" data-difficulty="4">★★★★</button>
+            <button class="chip" data-difficulty="5">★★★★★</button>
+          </div>
+          <div id="libraryList" class="phase-list library-grid"></div>
+        </div>
+      </section>
+    </main>
 
-  <section id="overviewView" class="hidden">
-    <div class="card">
-      <h2>Oversikt</h2>
-      <div class="sub" style="margin-bottom:10px">Alle spillere, fase og totalpoeng</div>
-      <div id="overviewTable" class="overview"></div>
-    </div>
-    <div class="card">
-      <h2>Fasene</h2>
-      <div class="phase-legend">Flerfarget kort = valgfri farge. Ensfargede kort = alle kort må ha samme farge.</div><div id="overviewPhaseList" class="phase-list"></div>
-    </div>
-  </section>
-
-  <section id="statsView" class="hidden">
-    <div class="card">
-      <h2>Scoreboard og statistikk</h2>
-      <div class="sub" style="margin-bottom:12px">Spill lagres på denne mobilen og grupperes etter hvem som spilte sammen.</div>
-      <div class="filter-row">
-        <select id="matchupFilter"></select>
-        <div class="row"><button class="btn2 small" id="importBtn">Importer</button><button class="btn2 small" id="exportBtn">Eksporter</button></div><input id="importFile" type="file" accept="application/json" class="hidden">
-      </div>
-    </div>
-    <div class="card">
-      <h2>Spillere totalt</h2>
-      <div id="summaryStats" class="stat-grid" style="margin-bottom:12px"></div><div id="globalStats"></div>
-    </div>
-    <div class="card">
-      <h2>Seiersprosent</h2>
-      <div id="winChart"></div>
-    </div>
-    <div class="card">
-      <h2>Rekorder</h2>
-      <div id="records"></div>
-    </div>
-    <div class="card">
-      <h2>Spillhistorikk</h2>
-      <div id="gameHistory"></div>
-    </div>
-  </section>
-</div>
-
-<nav class="tabs" id="tabs">
-  <div class="tabs-inner">
-    <button class="tab active" data-view="gameView">Spill</button>
-    <button class="tab" data-view="overviewView">Oversikt</button>
-    <button class="tab" data-view="statsView">Statistikk</button>
-    <button class="tab" data-view="setupView">Oppsett</button>
+    <nav class="bottom-nav"><button data-nav="homeView" class="active">Hjem</button><button data-nav="gameView">Spill</button><button data-nav="statsView">Statistikk</button><button data-nav="libraryView">Faser</button></nav>
   </div>
-</nav>
-<div id="toast" class="toast"></div>
 
-<script>
-(() => {
-  const colors = ['red','blue','green','yellow'];
-  const card = (label, color='any') => ({kind:'card', label, color});
-  const star = () => ({kind:'star', label:'★', color:'star'});
-  const plus = () => ({kind:'plus'});
-  const gap = () => ({kind:'gap'});
-  const setGroup = (count, letter='a', offset=0) => {
-    const out=[];
-    for(let i=0;i<count;i++){ out.push(card(letter, 'any')); }
-    return out;
-  };
-  const runGroup = (count, startLetter='a', offset=0) => {
-    const out=[]; const base=startLetter.charCodeAt(0);
-    for(let i=0;i<count;i++){ out.push(card(String.fromCharCode(base+i), 'any')); }
-    return out;
-  };
-  const colorGroup = (count, color='blue', startLetter='a') => {
-    const out=[]; const base=startLetter.charCodeAt(0);
-    for(let i=0;i<count;i++){ out.push(card(String.fromCharCode(base+i), color)); }
-    return out;
-  };
-  const starGroup = (count=1) => {
-    const out=[]; for(let i=0;i<count;i++){ out.push(star()); } return out;
-  };
-  const combine = (...groups) => groups.flatMap((g,i)=> i ? [gap(), plus(), gap(), ...g] : g);
+  <dialog id="confirmDialog"><form method="dialog"><h3 id="dialogTitle">Kontroller</h3><p id="dialogText"></p><div class="dialog-actions"><button value="cancel" class="btn secondary">Endre</button><button value="confirm" class="btn primary">Registrer</button></div></form></dialog>
+  <div id="toast" class="toast"></div>
 
-  const classic = [
-    {text:'2 sett med 3', visual:combine(setGroup(3,'a'),setGroup(3,'b',1))},
-    {text:'1 sett med 3 + 1 rekke med 4', visual:combine(setGroup(3,'a'),runGroup(4,'b',1))},
-    {text:'1 sett med 4 + 1 rekke med 4', visual:combine(setGroup(4,'a'),runGroup(4,'b',1))},
-    {text:'1 rekke med 7', visual:runGroup(7,'a')},
-    {text:'1 rekke med 8', visual:runGroup(8,'a')},
-    {text:'1 rekke med 9', visual:runGroup(9,'a')},
-    {text:'2 sett med 4', visual:combine(setGroup(4,'a'),setGroup(4,'b',1))},
-    {text:'7 kort i én farge', visual:colorGroup(7,'blue','a')},
-    {text:'1 sett med 5 + 1 sett med 2', visual:combine(setGroup(5,'a'),setGroup(2,'b',2))},
-    {text:'1 sett med 5 + 1 sett med 3', visual:combine(setGroup(5,'a'),setGroup(3,'b',2))}
-  ];
-  const extra = [
-    {text:'3 sett med 2', visual:combine(setGroup(2,'a'),setGroup(2,'b',1),setGroup(2,'c',2))},
-    {text:'1 sett med 4 + 1 sett med 3', visual:combine(setGroup(4,'a'),setGroup(3,'b',1))},
-    {text:'2 rekker med 4', visual:combine(runGroup(4,'a'),runGroup(4,'e',2))},
-    {text:'1 rekke med 5 + 1 sett med 3', visual:combine(runGroup(5,'a'),setGroup(3,'f',1))},
-    {text:'1 rekke med 6 + 2 like', visual:combine(runGroup(6,'a'),setGroup(2,'g',2))},
-    {text:'8 kort i én farge', visual:colorGroup(8,'green','a')},
-    {text:'4 par', visual:combine(setGroup(2,'a'),setGroup(2,'b',1),setGroup(2,'c',2),setGroup(2,'d',3))},
-    {text:'1 sett med 6', visual:setGroup(6,'a')},
-    {text:'1 rekke med 4 + 4 kort i én farge', visual:combine(runGroup(4,'a'),colorGroup(4,'yellow','e'))},
-    {text:'2 sett med 3 + 2 kort i én farge', visual:combine(setGroup(3,'a'),setGroup(3,'b',1),colorGroup(2,'red','c'))},
-    {text:'1 sett med 3 + 5 kort i én farge', visual:combine(setGroup(3,'a'),colorGroup(5,'blue','b'))},
-    {text:'1 rekke med 5 + 3 kort i én farge', visual:combine(runGroup(5,'a'),colorGroup(3,'green','f'))},
-    {text:'2 sett med 2 + 1 rekke med 4', visual:combine(setGroup(2,'a'),setGroup(2,'b',1),runGroup(4,'c',2))},
-    {text:'1 sett med 4 + 4 kort i én farge', visual:combine(setGroup(4,'a'),colorGroup(4,'red','b'))},
-    {text:'1 rekke med 6 + 1 par', visual:combine(runGroup(6,'a'),setGroup(2,'g',2))},
-    {text:'3 par + 1 sett med 3', visual:combine(setGroup(2,'a'),setGroup(2,'b',1),setGroup(2,'c',2),setGroup(3,'d',3))},
-    {text:'2 sett med 3 + 1 stjernekort', visual:combine(setGroup(3,'a'),setGroup(3,'b',1),starGroup(1)), note:'Stjernekortet må legges ned som eget kort.'},
-    {text:'1 rekke med 6 + 1 stjernekort', visual:combine(runGroup(6,'a'),starGroup(1)), note:'Stjernekortet kommer i tillegg til rekken.'},
-    {text:'5 kort i én farge + 2 stjernekort', visual:combine(colorGroup(5,'yellow','a'),starGroup(2)), note:'Begge stjernekort må legges ned.'},
-    {text:'1 sett med 4 + 1 rekke med 3 + 1 stjernekort', visual:combine(setGroup(4,'a'),runGroup(3,'b',1),starGroup(1))}
-  ];
-
-  let state = load() || { players: [], phases: [...classic], gameLength: 10, round: 1, usePoints: true, started: false, visualVersion: 7 };
-  let archive = loadArchive();
-  let savedNames = loadSavedNames();
-  let darkMode = localStorage.getItem('phase10_dark_mode') === '1';
-  document.body.classList.toggle('dark', darkMode);
-  if(!state.gameLength) state.gameLength = state.phases?.length === 5 ? 5 : 10;
-  if(!state.visualVersion || state.visualVersion < 7){ state.phases=[...classic].slice(0,state.gameLength); state.visualVersion=7; }
-
-  const $ = id => document.getElementById(id);
-  const playerName = $('playerName'), playerList = $('playerList'), usePoints = $('usePoints'), phaseMode = $('phaseMode'), gameLength = $('gameLength');
-  const setupView = $('setupView'), gameView = $('gameView'), finishView = $('finishView'), overviewView = $('overviewView'), statsView = $('statsView'), tabs = $('tabs');
-  let lastFinishedGame = null;
-  let wakeLock = null;
-  let wakeWanted = false;
-
-  function save(){ localStorage.setItem('phase10_mobile_state', JSON.stringify(state)); }
-  function load(){ try{return JSON.parse(localStorage.getItem('phase10_mobile_state'))}catch{return null} }
-  function saveArchive(){ localStorage.setItem('phase10_game_archive', JSON.stringify(archive)); }
-  function loadArchive(){ try{return JSON.parse(localStorage.getItem('phase10_game_archive'))||[]}catch{return []} }
-  function loadSavedNames(){ try{return JSON.parse(localStorage.getItem('phase10_saved_names'))||[]}catch{return []} }
-  function saveSavedNames(){ localStorage.setItem('phase10_saved_names', JSON.stringify(savedNames)); }
-  function rememberName(name){ if(!savedNames.some(n=>n.toLowerCase()===name.toLowerCase())){ savedNames.push(name); savedNames.sort((a,b)=>a.localeCompare(b,'no')); saveSavedNames(); } }
-  function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1600); }
-  function escapeHtml(s){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
-  function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
-  function phasesFor(mode, count=state.gameLength||10){
-    count = Number(count) === 5 ? 5 : 10;
-    if(mode==='classic') return [...classic].slice(0,count);
-    if(mode==='mixed'){
-      const classicCount = Math.ceil(count/2);
-      return shuffle([...classic.slice(0,classicCount), ...shuffle(extra).slice(0,count-classicCount)]);
-    }
-    return shuffle([...classic,...extra]).slice(0,count);
-  }
-
-  function renderPlayers(){
-    const savedEl=$('savedPlayers');
-    savedEl.innerHTML = savedNames.length ? savedNames.map(n=>`<button class="pill" type="button" data-quick-name="${escapeHtml(n)}">+ ${escapeHtml(n)}</button>`).join('') : '';
-    savedEl.querySelectorAll('[data-quick-name]').forEach(b=>b.onclick=()=>{ const name=b.dataset.quickName; if(!state.players.some(p=>p.name.toLowerCase()===name.toLowerCase())){ state.players.push({name,phase:0,points:0,history:[]}); save(); renderAll(); } });
-    if(!state.players.length){ playerList.innerHTML='<div class="empty">Ingen spillere lagt til ennå</div>'; return; }
-    playerList.innerHTML=state.players.map((p,i)=>`<div class="player-edit"><span>${escapeHtml(p.name)}</span><button class="danger small" data-remove="${i}">Fjern</button></div>`).join('');
-    playerList.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{ state.players.splice(+b.dataset.remove,1); save(); renderAll(); });
-  }
-
-  function phaseVisual(phase){
-    const groups=[]; let current=[];
-    (phase.visual||[]).forEach(item=>{
-      if(item.kind==='plus'){ if(current.length){groups.push(current);current=[];} }
-      else if(item.kind!=='gap') current.push(item);
-    });
-    if(current.length) groups.push(current);
-    return groups.map((group,index)=>{
-      const cards=group.map(item=>`<span class="card-chip ${item.color||'any'}"><span class="card-face">${escapeHtml(item.label)}</span></span>`).join('');
-      return `${index?'<span class="plus">+</span>':''}<span class="phase-group">${cards}</span>`;
-    }).join('');
-  }
-
-  function renderPhaseList(target){
-    target.innerHTML=state.phases.map((p,i)=>`<div class="phase-item"><div class="num">${i+1}</div><div class="phase-content"><div class="phase-text">${escapeHtml(p.text)}</div><div class="phase-visual">${phaseVisual(p)}</div>${p.note?`<div class="phase-note">${escapeHtml(p.note)}</div>`:''}</div></div>`).join('');
-  }
-
-  function currentRoundRecord(p){ return (p.history||[]).find(h=>h.round===state.round) || null; }
-  function phaseCardCount(phase){
-    return (phase?.visual||[]).filter(item=>item.kind!=='plus' && item.kind!=='gap').length;
-  }
-  function maxPointsAfterCompletedPhase(phase){
-    // En spiller starter normalt runden med 10 kort. Hvert restkort kan maksimalt gi 25 poeng.
-    return Math.max(0, 10-phaseCardCount(phase))*25;
-  }
-  function recalculatePlayer(p){
-    p.history = (p.history||[]).sort((a,b)=>a.round-b.round);
-    p.points = p.history.reduce((sum,h)=>sum+(Number(h.points)||0),0);
-    p.phase = Math.min(state.phases.length,p.history.reduce((sum,h)=>sum+(h.completed?1:0),0));
-  }
-  function roundStarter(){
-    if(!state.players.length) return '–';
-    return state.players[(Math.max(1,state.round)-1)%state.players.length].name;
-  }
-
-  function renderGame(){
-    $('roundNo').textContent=state.round;
-    $('roundStarter').textContent=roundStarter();
-    const anyDone=state.players.some(p=>(p.phase||0)>=state.phases.length);
-    $('finishGameBtn').textContent=anyDone?'Fullfør spill':'Avslutt spill';
-    $('finishGameBtn').className=anyDone?'ok small':'danger small';
-    if(!state.players.length){ $('scoreGrid').innerHTML='<div class="empty">Legg til spillere i Oppsett</div>'; $('roundCompleteHint').classList.add('hidden'); return; }
-    $('scoreGrid').innerHTML=state.players.map((p,i)=>{
-      const total=state.phases.length;
-      const rr=currentRoundRecord(p);
-      // Når en spiller er registrert i denne runden, viser vi fasen som nettopp ble spilt.
-      // Neste fase vises først etter at brukeren trykker «Neste runde».
-      const phaseIndex=Math.min(rr ? Math.max(0,(rr.phase||1)-1) : (p.phase||0), total-1);
-      const done=(p.phase||0)>=total;
-      const displayDone=done && !rr;
-      return `<div class="score-card">
-        <div class="score-top"><div><h3>${escapeHtml(p.name)}</h3><div class="total-points">${state.usePoints?(p.points||0)+' poeng':'Fase '+Math.min((p.phase||0)+1,total)}</div><div class="sub">${displayDone?'Alle faser fullført':'Fase '+(phaseIndex+1)+': '+escapeHtml(state.phases[phaseIndex].text)}</div>${displayDone?'':`<div class="phase-visual">${phaseVisual(state.phases[phaseIndex])}</div>`}</div><span class="badge">${displayDone?'Ferdig':rr?'Registrert fase '+(phaseIndex+1):'Fase '+(phaseIndex+1)}</span></div>
-        ${displayDone?'<div class="ok" style="padding:10px;border-radius:10px;margin-top:12px;font-weight:700">Ferdig med alle '+total+' faser</div>':`
-        ${state.usePoints?`<div class="points"><label>Poeng denne runden</label><input type="number" min="0" inputmode="numeric" id="pts-${i}" value="${rr?rr.points:''}" placeholder="0"></div>`:''}
-        ${rr && state.editingPlayer!==i?`<div class="registered">Registrert: ${rr.completed?'✓ Fase fullført':'Ikke fullført'}${state.usePoints?' · '+rr.points+' poeng':''}</div>
-        <div class="edit-actions"><button class="btn2" data-edit="${i}">Endre</button><button class="danger" data-undo="${i}">Angre registrering</button></div>`:
-        `<div class="score-actions"><button class="ok" data-complete="${i}">✓ Fullført fase</button><button class="btn2" data-fail="${i}">Ikke fullført</button>${rr?`<button class="danger" data-cancel-edit="${i}">Avbryt</button>`:''}</div>`}`}
-      </div>`;
-    }).join('');
-    const allRegistered=state.players.length>0 && state.players.every(p=>!!currentRoundRecord(p));
-    $('roundCompleteHint').classList.toggle('hidden', !allRegistered);
-    $('nextRoundBtn').className=allRegistered?'btn small':'btn2 small';
-    $('previousRoundBtn').classList.toggle('hidden', state.round<=1);
-    document.querySelectorAll('[data-complete]').forEach(b=>b.onclick=()=>record(+b.dataset.complete,true));
-    document.querySelectorAll('[data-fail]').forEach(b=>b.onclick=()=>record(+b.dataset.fail,false));
-    document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{ state.editingPlayer=+b.dataset.edit; save(); renderAll(); });
-    document.querySelectorAll('[data-cancel-edit]').forEach(b=>b.onclick=()=>{ state.editingPlayer=null; save(); renderAll(); });
-    document.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>undoRecord(+b.dataset.undo));
-  }
-
-  function record(i, completed){
-    const p=state.players[i];
-    const existing=currentRoundRecord(p);
-    const pts=state.usePoints ? Math.max(0, Number(document.getElementById('pts-'+i)?.value||0)) : 0;
-    const phaseIndex=Math.min(existing ? Math.max(0,(existing.phase||1)-1) : (p.phase||0), state.phases.length-1);
-    const phase=state.phases[phaseIndex];
-    if(completed && state.usePoints){
-      const maxPossible=maxPointsAfterCompletedPhase(phase);
-      if(pts>maxPossible){
-        const message=`Du har registrert ${pts} poeng, men denne fasen bruker ${phaseCardCount(phase)} kort. Da kan en spiller maksimalt ha ${maxPossible} poeng igjen dersom fasen er fullført. Er du sikker på at fasen skal registreres som fullført?`;
-        if(!confirm(message)) return;
-      }
-    }
-    p.history=p.history||[];
-    p.history=p.history.filter(h=>h.round!==state.round);
-    p.history.push({round:state.round,phase:phaseIndex+1,completed,points:pts});
-    state.editingPlayer=null;
-    recalculatePlayer(p);
-    const completedRound = state.round;
-    save(); renderAll(); toast('Registreringen er lagret');
-
-    // Når siste spiller i runden er registrert, går appen automatisk videre.
-    // En kort forsinkelse gjør at brukeren ser bekreftelsen før neste runde vises.
-    if(state.players.length>0 && state.players.every(player=>!!currentRoundRecord(player))){
-      setTimeout(()=>{
-        if(state.round===completedRound && state.players.every(player=>!!currentRoundRecord(player))){
-          advanceRound(true);
-        }
-      }, 800);
-    }
-  }
-
-  function undoRecord(i){
-    const p=state.players[i];
-    p.history=(p.history||[]).filter(h=>h.round!==state.round);
-    state.editingPlayer=null;
-    recalculatePlayer(p);
-    save(); renderAll(); toast('Registreringen er angret');
-  }
-
-
-  function advanceRound(auto=false){
-    state.editingPlayer=null;
-    state.round++;
-    save();
-    renderAll();
-    toast((auto?'Neste runde · ':'')+roundStarter()+' starter');
-  }
-
-  function previousRound(){
-    if(state.round<=1) return;
-    state.editingPlayer=null;
-    state.round--;
-    save();
-    renderAll();
-    toast('Tilbake til runde '+state.round+' – du kan endre registreringene');
-  }
-
-  function renderOverview(){
-    if(!state.players.length){ $('overviewTable').innerHTML='<div class="empty">Ingen spillere</div>'; return; }
-    const sorted=[...state.players].sort((a,b)=>(b.phase||0)-(a.phase||0) || (a.points||0)-(b.points||0));
-    $('overviewTable').innerHTML=`<table class="table"><thead><tr><th>Spiller</th><th>Fase</th><th>Neste oppgave</th>${state.usePoints?'<th>Poeng</th>':''}</tr></thead><tbody>${sorted.map((p,idx)=>{
-      const done=(p.phase||0)>=state.phases.length; return `<tr><td class="${idx===0?'leader':''}">${escapeHtml(p.name)}</td><td>${done?'Ferdig':(p.phase||0)+1}</td><td>${done?'Alle fullført':escapeHtml(state.phases[p.phase||0].text)}</td>${state.usePoints?`<td>${p.points||0}</td>`:''}</tr>`;
-    }).join('')}</tbody></table>`;
-  }
-
-  function matchupKey(players){ return players.map(p=>p.name.trim().toLowerCase()).sort().join('|'); }
-
-  function finishGame(){
-    if(!state.started || !state.players.length) return;
-    const ranked=[...state.players].sort((a,b)=>(b.phase||0)-(a.phase||0) || (a.points||0)-(b.points||0));
-    const bestPhase=ranked[0].phase||0, bestPoints=ranked[0].points||0;
-    const winners=ranked.filter(p=>(p.phase||0)===bestPhase && (!state.usePoints || (p.points||0)===bestPoints)).map(p=>p.name);
-    const game={
-      id:Date.now(), date:new Date().toISOString(), round:state.round, usePoints:state.usePoints,
-      matchupKey:matchupKey(state.players), players:ranked.map((p,index)=>({name:p.name,phase:p.phase||0,points:p.points||0,place:index+1,winner:winners.includes(p.name),rounds:(p.history||[]).length})),
-      winners, phases:state.phases.map(p=>p.text)
-    };
-    archive.unshift(game); saveArchive(); lastFinishedGame=game;
-    state.started=false; save(); renderAll(); renderFinish(game); showView('finishView'); toast('Spillet er lagret');
-  }
-
-  function renderFinish(game){
-    if(!game) return;
-    const winnerText=game.winners.length>1?game.winners.join(' og ')+' deler seieren':game.winners[0]+' vant';
-    $('finishTitle').textContent=winnerText;
-    $('finishSubtitle').textContent=`${game.round} runder · ${game.players.length} spillere`;
-    const top=game.players.slice(0,3);
-    const order=top.length===1?[top[0]]:top.length===2?[top[1],top[0]]:[top[1],top[0],top[2]];
-    $('podium').innerHTML=order.map((p,idx)=>{
-      const place=top.indexOf(p)+1;
-      return `<div class="podium-place podium-${place}"><div class="podium-name">${escapeHtml(p.name)}</div><div class="podium-block">${place===1?'🥇 1.':place===2?'🥈 2.':'🥉 3.'}</div></div>`;
-    }).join('');
-    $('finishResults').innerHTML=game.players.map(p=>`<div class="result-row"><div><strong>${p.place}. ${escapeHtml(p.name)}</strong>${p.winner?' 🏆':''}<div class="sub">Fase ${p.phase} · ${p.rounds} registrerte runder</div></div><strong>${game.usePoints?p.points+' p':''}</strong></div>`).join('');
-  }
-
-  function selectedGames(){
-    const key=$('matchupFilter')?.value||'all';
-    return key==='all'?archive:archive.filter(g=>g.matchupKey===key);
-  }
-
-  function renderStats(){
-    const filter=$('matchupFilter');
-    if(!filter) return;
-    const current=filter.value||'all';
-    const groups={}; archive.forEach(g=>{groups[g.matchupKey]=g.players.map(p=>p.name).sort((a,b)=>a.localeCompare(b,'no')).join(' + ')});
-    filter.innerHTML='<option value="all">Alle spillere og spill</option>'+Object.entries(groups).sort((a,b)=>a[1].localeCompare(b[1],'no')).map(([k,v])=>`<option value="${escapeHtml(k)}">${escapeHtml(v)}</option>`).join('');
-    if([...filter.options].some(o=>o.value===current)) filter.value=current;
-    const games=selectedGames();
-    if(!games.length){
-      $('summaryStats').innerHTML=''; $('records').innerHTML='<div class="empty">Rekorder vises etter første lagrede spill</div>'; $('globalStats').innerHTML='<div class="empty">Ingen avsluttede spill er lagret ennå</div>';
-      $('winChart').innerHTML='<div class="empty">Diagram vises etter første lagrede spill</div>';
-      $('gameHistory').innerHTML='<div class="empty">Trykk «Avslutt spill» når et spill er ferdig</div>';
-      return;
-    }
-    const stats={};
-    games.forEach(g=>g.players.forEach(p=>{
-      const k=p.name.trim().toLowerCase();
-      stats[k] ||= {name:p.name,games:0,wins:0,points:0,phase:0,places:0};
-      stats[k].games++; stats[k].wins += p.winner?1:0; stats[k].points += p.points||0; stats[k].phase += p.phase||0; stats[k].places += p.place||0;
-    }));
-    const rows=Object.values(stats).sort((a,b)=>(b.wins/b.games)-(a.wins/a.games)||b.wins-a.wins);
-    const totalGames=games.length;
-    const topWinner=[...rows].sort((a,b)=>b.wins-a.wins)[0];
-    const mostPlayed=[...rows].sort((a,b)=>b.games-a.games)[0];
-    $('summaryStats').innerHTML=`<div class="stat-box"><div class="stat-value">${totalGames}</div><div class="stat-label">Lagrede spill</div></div><div class="stat-box"><div class="stat-value">${rows.length}</div><div class="stat-label">Spillere</div></div><div class="stat-box"><div class="stat-value">${escapeHtml(topWinner?.name||'-')}</div><div class="stat-label">Flest seiere</div></div><div class="stat-box"><div class="stat-value">${escapeHtml(mostPlayed?.name||'-')}</div><div class="stat-label">Flest spill</div></div>`;
-    const bestPct=[...rows].filter(r=>r.games>=2).sort((a,b)=>(b.wins/b.games)-(a.wins/a.games))[0]||topWinner;
-    const lowScore=games.filter(g=>g.usePoints).flatMap(g=>g.players.filter(p=>p.winner).map(p=>({name:p.name,points:p.points}))).sort((a,b)=>a.points-b.points)[0];
-    $('records').innerHTML=`<div class="stat-grid"><div class="stat-box"><div class="stat-value">${escapeHtml(topWinner?.name||'-')}</div><div class="stat-label">Flest seiere (${topWinner?.wins||0})</div></div><div class="stat-box"><div class="stat-value">${escapeHtml(bestPct?.name||'-')}</div><div class="stat-label">Beste seiersprosent (${bestPct?Math.round(bestPct.wins/bestPct.games*100):0} %)</div></div><div class="stat-box"><div class="stat-value">${escapeHtml(mostPlayed?.name||'-')}</div><div class="stat-label">Mest aktiv (${mostPlayed?.games||0} spill)</div></div><div class="stat-box"><div class="stat-value">${lowScore?lowScore.points:'-'}</div><div class="stat-label">Laveste vinnerpoeng${lowScore?' – '+escapeHtml(lowScore.name):''}</div></div></div>`;
-    $('globalStats').innerHTML=`<div class="overview"><table class="table"><thead><tr><th>Spiller</th><th>Spill</th><th>Seiere</th><th>Seier %</th><th>Snittplass</th>${games.some(g=>g.usePoints)?'<th>Snittpoeng</th>':''}</tr></thead><tbody>${rows.map(r=>`<tr><td><strong>${escapeHtml(r.name)}</strong></td><td>${r.games}</td><td>${r.wins}</td><td>${Math.round(r.wins/r.games*100)} %</td><td>${(r.places/r.games).toFixed(1)}</td>${games.some(g=>g.usePoints)?`<td>${Math.round(r.points/r.games)}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
-    const maxPct=Math.max(1,...rows.map(r=>r.wins/r.games*100));
-    $('winChart').innerHTML=rows.map(r=>{const pct=Math.round(r.wins/r.games*100);return `<div class="bar-row"><div><strong>${escapeHtml(r.name)}</strong></div><div class="bar-track"><div class="bar-fill" style="width:${pct/maxPct*100}%"></div></div><div>${pct}%</div></div>`}).join('');
-    $('gameHistory').innerHTML=games.map(g=>`<div class="history-card"><div class="history-head"><div><strong>${new Date(g.date).toLocaleDateString('nb-NO')}</strong><div class="sub">${escapeHtml(g.players.map(p=>p.name).join(' · '))}</div></div><button class="danger small" data-delete-game="${g.id}">Slett</button></div><div style="margin-top:10px">${g.players.map(p=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-top:1px solid var(--border)"><span class="${p.winner?'winner':''}">${p.winner?'🏆 ':''}${escapeHtml(p.name)}</span><span>Fase ${p.phase}${g.usePoints?' · '+p.points+' p':''}</span></div>`).join('')}</div></div>`).join('');
-    document.querySelectorAll('[data-delete-game]').forEach(b=>b.onclick=()=>{ if(confirm('Slette dette spillet fra historikken?')){ archive=archive.filter(g=>String(g.id)!==String(b.dataset.deleteGame)); saveArchive(); renderStats(); } });
-  }
-
-  function showView(id){
-    [setupView,gameView,finishView,overviewView,statsView].forEach(v=>v.classList.toggle('hidden',v.id!==id));
-    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===id));
-  }
-
-  function renderAll(){
-    usePoints.checked=state.usePoints;
-    gameLength.value=String(state.gameLength||state.phases.length||10);
-    $('phaseListHeading').textContent=`Dagens ${state.phases.length} faser`;
-    renderPlayers(); renderPhaseList($('setupPhaseList')); renderPhaseList($('overviewPhaseList'));
-    renderGame(); renderOverview(); renderStats();
-    tabs.classList.remove('hidden');
-    if(state.started && setupView.classList.contains('hidden') && gameView.classList.contains('hidden') && overviewView.classList.contains('hidden') && statsView.classList.contains('hidden')) showView('gameView');
-  }
-
-  async function requestWakeLock(){
-    wakeWanted=true;
-    if(!('wakeLock' in navigator)){ toast('Skjermlås støttes ikke i denne nettleseren'); return false; }
-    try{
-      if(wakeLock && !wakeLock.released) return true;
-      wakeLock=await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release',()=>{ wakeLock=null; updateWakeButton(); });
-      updateWakeButton(); toast('Skjermen holdes på'); return true;
-    }catch(e){ updateWakeButton(); toast('Kunne ikke holde skjermen på'); return false; }
-  }
-  async function releaseWakeLock(){
-    wakeWanted=false;
-    try{ if(wakeLock && !wakeLock.released) await wakeLock.release(); }catch(e){}
-    wakeLock=null; updateWakeButton(); toast('Vanlig skjermlås er aktiv');
-  }
-  function updateWakeButton(){
-    const active=!!(wakeLock && !wakeLock.released);
-    $('wakeBtn').textContent=active?'Skjerm alltid på ✓':'Skjerm på';
-    $('wakeBtn').classList.toggle('wake-active',active);
-  }
-  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && wakeWanted) requestWakeLock(); });
-
-  $('addPlayerBtn').addEventListener('click',()=>{
-    const name=playerName.value.trim();
-    if(!name){ toast('Skriv inn et navn'); playerName.focus(); return; }
-    state.players.push({name,phase:0,points:0,history:[]}); rememberName(name); playerName.value=''; save(); renderAll(); playerName.focus();
-  });
-  playerName.addEventListener('keydown',e=>{ if(e.key==='Enter') $('addPlayerBtn').click(); });
-  usePoints.addEventListener('change',()=>{ state.usePoints=usePoints.checked; save(); renderAll(); });
-  phaseMode.addEventListener('change',()=>{ state.phases=phasesFor(phaseMode.value,state.gameLength); save(); renderAll(); });
-  gameLength.addEventListener('change',()=>{ state.gameLength=Number(gameLength.value); state.phases=phasesFor(phaseMode.value,state.gameLength); save(); renderAll(); });
-  $('startGameBtn').addEventListener('click',()=>{
-    if(state.players.length<2){ toast('Legg til minst 2 spillere'); return; }
-    if(!state.started) state.players.forEach(p=>{p.phase=0;p.points=0;p.history=[];});
-    state.started=true; state.round=1; state.usePoints=usePoints.checked; state.gameLength=state.phases.length; save(); tabs.classList.remove('hidden'); showView('gameView'); renderAll();
-  });
-  $('nextRoundBtn').addEventListener('click',()=>{ const missing=state.players.filter(p=>!currentRoundRecord(p)); if(missing.length && !confirm('Mangler registrering for: '+missing.map(p=>p.name).join(', ')+'. Gå videre likevel?')) return; advanceRound(false); });
-  $('previousRoundBtn').addEventListener('click',previousRound);
-  $('finishGameBtn').addEventListener('click',()=>{ const done=state.players.some(p=>(p.phase||0)>=state.phases.length); if(confirm(done?'Fullføre spillet og vise resultatet?':'Avslutte og lagre dette spillet i statistikken?')) finishGame(); });
-  $('matchupFilter').addEventListener('change',renderStats);
-  $('themeBtn').textContent=darkMode?'Lys':'Mørk';
-  $('themeBtn').addEventListener('click',()=>{ darkMode=!darkMode; document.body.classList.toggle('dark',darkMode); localStorage.setItem('phase10_dark_mode',darkMode?'1':'0'); $('themeBtn').textContent=darkMode?'Lys':'Mørk'; });
-  $('wakeBtn').addEventListener('click',()=>{ if(wakeLock && !wakeLock.released) releaseWakeLock(); else requestWakeLock(); });
-  $('finishStatsBtn').addEventListener('click',()=>showView('statsView'));
-  $('finishNewBtn').addEventListener('click',()=>{ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:7}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); });
-  $('importBtn').addEventListener('click',()=>$('importFile').click());
-  $('importFile').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f)return; try{ const data=JSON.parse(await f.text()); if(!Array.isArray(data)) throw new Error(); if(confirm('Importere og erstatte eksisterende spillhistorikk?')){ archive=data; saveArchive(); renderStats(); toast('Historikken er importert'); } }catch{ alert('Filen kunne ikke leses.'); } e.target.value=''; });
-  $('exportBtn').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(archive,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='phase10-statistikk.json'; a.click(); URL.revokeObjectURL(a.href); });
-  $('resetBtn').addEventListener('click',()=>{
-    if(confirm('Starte et helt nytt spill?')){ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:7}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); }
-  });
-  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.view)));
-
-  updateWakeButton();
-  if(state.started) showView('gameView'); else showView('setupView');
-  renderAll();
-})();
-</script>
+  <script src="data/phases.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
