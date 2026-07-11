@@ -19,3 +19,20 @@
 .result-actions .primary{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
 
 @media(max-width:650px){.home-dashboard .section-head{display:block}.home-dashboard .section-head .btn{width:100%;margin-top:10px}.library-grid{grid-template-columns:1fr}.playing-card{width:36px;height:52px}.cards-line{gap:7px}.group{gap:5px}.plus{font-size:20px}.leader-card{align-items:flex-start;flex-direction:column}.stat-grid.home-stats{grid-template-columns:repeat(3,1fr)}.home-stats .stat-value{font-size:20px}.home-stats .stat-label{font-size:11px}}
+
+/* v2.2: richer phase library and four-colour neutral cards */
+.phase-heading{display:flex;align-items:center;gap:9px;min-width:0}.phase-no{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#2563eb;color:#fff;font-size:13px;font-weight:900}.phase-meta{display:flex;align-items:center;gap:8px;margin:7px 0 10px;color:var(--muted);font-size:12px;font-weight:750}.type-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #dbe4ff}.library-grid .phase-item{border-left:5px solid #2563eb;background:#fff}.library-grid .phase-item:nth-child(5n+2){border-left-color:#16a34a}.library-grid .phase-item:nth-child(5n+3){border-left-color:#f59e0b}.library-grid .phase-item:nth-child(5n+4){border-left-color:#dc2626}.library-grid .phase-item:nth-child(5n){border-left-color:#7c3aed}.library-grid .phase-title{gap:12px}.library-grid .phase-item:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(15,23,42,.09)}
+.playing-card.any{background:
+linear-gradient(135deg,#ef4444 0 13px,transparent 14px) top left/22px 22px no-repeat,
+linear-gradient(225deg,#facc15 0 13px,transparent 14px) top right/22px 22px no-repeat,
+linear-gradient(45deg,#22c55e 0 13px,transparent 14px) bottom left/22px 22px no-repeat,
+linear-gradient(315deg,#2563eb 0 13px,transparent 14px) bottom right/22px 22px no-repeat,
+linear-gradient(180deg,#fff,#f8fafc)!important}
+.playing-card.any::before,.playing-card.any::after{display:none}
+.player-card input[type=number]:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.12);outline:none}
+@media(max-width:650px){.phase-meta{margin-top:5px}.phase-no{width:25px;height:25px}.library-grid .phase-item{padding:13px}.playing-card.any{background:
+linear-gradient(135deg,#ef4444 0 11px,transparent 12px) top left/19px 19px no-repeat,
+linear-gradient(225deg,#facc15 0 11px,transparent 12px) top right/19px 19px no-repeat,
+linear-gradient(45deg,#22c55e 0 11px,transparent 12px) bottom left/19px 19px no-repeat,
+linear-gradient(315deg,#2563eb 0 11px,transparent 12px) bottom right/19px 19px no-repeat,
+linear-gradient(180deg,#fff,#f8fafc)!important}}
