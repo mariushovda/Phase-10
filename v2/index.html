@@ -23,9 +23,17 @@
           <button id="newGameBtn" class="btn primary wide">Nytt spill</button>
           <button id="continueBtn" class="btn secondary wide hidden">Fortsett spill</button>
         </div>
+        <div class="home-dashboard card">
+          <div class="section-head">
+            <div><h2>Oversikt</h2><p>Statistikk fra spillene som er lagret på denne enheten.</p></div>
+            <button class="btn ghost" data-nav="statsView">Se all statistikk</button>
+          </div>
+          <div id="homeStats" class="stat-grid home-stats"></div>
+          <div id="homeLeader" class="home-leader"></div>
+        </div>
         <div class="grid two">
-          <button class="menu-card" data-nav="statsView"><strong>📊 Statistikk</strong><span>Seiere, plassering og historikk</span></button>
-          <button class="menu-card" data-nav="libraryView"><strong>🃏 Fasebibliotek</strong><span>Se alle tilgjengelige faser</span></button>
+          <button class="menu-card" data-nav="statsView"><strong>📊 Statistikk</strong><span>Seiere, plassering, kombinasjoner og historikk</span></button>
+          <button class="menu-card" data-nav="libraryView"><strong>🃏 Fasebibliotek</strong><span>Se alle faser og vanskelighetsgrad</span></button>
         </div>
       </section>
 
@@ -70,7 +78,20 @@
         <div class="card"><h2>Historikk</h2><div id="historyList"></div></div>
       </section>
 
-      <section id="libraryView" class="view"><div class="card"><h2>Fasebibliotek</h2><p>Fasene er merket med vanskelighetsgrad og brukes av den balanserte generatoren.</p><div id="libraryList" class="phase-list"></div></div></section>
+      <section id="libraryView" class="view">
+        <div class="card">
+          <div class="section-head"><div><h2>Fasebibliotek</h2><p>Alle tilgjengelige faser, gruppert etter vanskelighetsgrad.</p></div><span id="libraryCount" class="count-badge"></span></div>
+          <div class="library-filters" id="libraryFilters">
+            <button class="chip active" data-difficulty="all">Alle</button>
+            <button class="chip" data-difficulty="1">★</button>
+            <button class="chip" data-difficulty="2">★★</button>
+            <button class="chip" data-difficulty="3">★★★</button>
+            <button class="chip" data-difficulty="4">★★★★</button>
+            <button class="chip" data-difficulty="5">★★★★★</button>
+          </div>
+          <div id="libraryList" class="phase-list library-grid"></div>
+        </div>
+      </section>
     </main>
 
     <nav class="bottom-nav"><button data-nav="homeView" class="active">Hjem</button><button data-nav="gameView">Spill</button><button data-nav="statsView">Statistikk</button><button data-nav="libraryView">Faser</button></nav>
