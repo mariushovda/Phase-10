@@ -301,6 +301,13 @@
   }
 
   function currentRoundRecord(p){ return (p.history||[]).find(h=>h.round===state.round) || null; }
+  function phaseCardCount(phase){
+    return (phase?.visual||[]).filter(item=>item.kind!=='plus' && item.kind!=='gap').length;
+  }
+  function maxPointsAfterCompletedPhase(phase){
+    // En spiller starter normalt runden med 10 kort. Hvert restkort kan maksimalt gi 25 poeng.
+    return Math.max(0, 10-phaseCardCount(phase))*25;
+  }
   function recalculatePlayer(p){
     p.history = (p.history||[]).sort((a,b)=>a.round-b.round);
     p.points = p.history.reduce((sum,h)=>sum+(Number(h.points)||0),0);
@@ -325,29 +332,43 @@
         <div class="score-top"><div><h3>${escapeHtml(p.name)}</h3><div class="total-points">${state.usePoints?(p.points||0)+' poeng':'Fase '+Math.min((p.phase||0)+1,total)}</div><div class="sub">${done?'Alle faser fullført':'Fase '+(phaseIndex+1)+': '+escapeHtml(state.phases[phaseIndex].text)}</div>${done?'':`<div class="phase-visual">${phaseVisual(state.phases[phaseIndex])}</div>`}</div><span class="badge">${done?'Ferdig':'Fase '+(phaseIndex+1)}</span></div>
         ${done && !rr?'<div class="ok" style="padding:10px;border-radius:10px;margin-top:12px;font-weight:700">Ferdig med alle '+total+' faser</div>':`
         ${state.usePoints?`<div class="points"><label>Poeng denne runden</label><input type="number" min="0" inputmode="numeric" id="pts-${i}" value="${rr?rr.points:''}" placeholder="0"></div>`:''}
-        ${rr?`<div class="registered">Registrert: ${rr.completed?'✓ Fase fullført':'Ikke fullført'}${state.usePoints?' · '+rr.points+' poeng':''}</div>
-        <div class="edit-actions"><button class="ok" data-complete="${i}">Endre til fullført</button><button class="btn2" data-fail="${i}">Endre til ikke fullført</button><button class="danger" data-undo="${i}">Angre registrering</button></div>`:
-        `<div class="score-actions"><button class="ok" data-complete="${i}">✓ Fullført fase</button><button class="btn2" data-fail="${i}">Ikke fullført</button></div>`}`}
+        ${rr && state.editingPlayer!==i?`<div class="registered">Registrert: ${rr.completed?'✓ Fase fullført':'Ikke fullført'}${state.usePoints?' · '+rr.points+' poeng':''}</div>
+        <div class="edit-actions"><button class="btn2" data-edit="${i}">Endre</button><button class="danger" data-undo="${i}">Angre registrering</button></div>`:
+        `<div class="score-actions"><button class="ok" data-complete="${i}">✓ Fullført fase</button><button class="btn2" data-fail="${i}">Ikke fullført</button>${rr?`<button class="danger" data-cancel-edit="${i}">Avbryt</button>`:''}</div>`}`}
       </div>`;
     }).join('');
     document.querySelectorAll('[data-complete]').forEach(b=>b.onclick=()=>record(+b.dataset.complete,true));
     document.querySelectorAll('[data-fail]').forEach(b=>b.onclick=()=>record(+b.dataset.fail,false));
+    document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{ state.editingPlayer=+b.dataset.edit; save(); renderAll(); });
+    document.querySelectorAll('[data-cancel-edit]').forEach(b=>b.onclick=()=>{ state.editingPlayer=null; save(); renderAll(); });
     document.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>undoRecord(+b.dataset.undo));
   }
 
   function record(i, completed){
     const p=state.players[i];
+    const existing=currentRoundRecord(p);
     const pts=state.usePoints ? Math.max(0, Number(document.getElementById('pts-'+i)?.value||0)) : 0;
+    const phaseIndex=Math.min(existing ? Math.max(0,(existing.phase||1)-1) : (p.phase||0), state.phases.length-1);
+    const phase=state.phases[phaseIndex];
+    if(completed && state.usePoints){
+      const maxPossible=maxPointsAfterCompletedPhase(phase);
+      if(pts>maxPossible){
+        const message=`Du har registrert ${pts} poeng, men denne fasen bruker ${phaseCardCount(phase)} kort. Da kan en spiller maksimalt ha ${maxPossible} poeng igjen dersom fasen er fullført. Er du sikker på at fasen skal registreres som fullført?`;
+        if(!confirm(message)) return;
+      }
+    }
     p.history=p.history||[];
     p.history=p.history.filter(h=>h.round!==state.round);
-    p.history.push({round:state.round,phase:(p.phase||0)+1,completed,points:pts});
+    p.history.push({round:state.round,phase:phaseIndex+1,completed,points:pts});
+    state.editingPlayer=null;
     recalculatePlayer(p);
-    save(); renderAll(); toast(currentRoundRecord(p)?'Registreringen er lagret':'Runde registrert');
+    save(); renderAll(); toast('Registreringen er lagret');
   }
 
   function undoRecord(i){
     const p=state.players[i];
     p.history=(p.history||[]).filter(h=>h.round!==state.round);
+    state.editingPlayer=null;
     recalculatePlayer(p);
     save(); renderAll(); toast('Registreringen er angret');
   }
@@ -481,19 +502,19 @@
     if(!state.started) state.players.forEach(p=>{p.phase=0;p.points=0;p.history=[];});
     state.started=true; state.round=1; state.usePoints=usePoints.checked; state.gameLength=state.phases.length; save(); tabs.classList.remove('hidden'); showView('gameView'); renderAll();
   });
-  $('nextRoundBtn').addEventListener('click',()=>{ const missing=state.players.filter(p=>!currentRoundRecord(p)); if(missing.length && !confirm('Mangler registrering for: '+missing.map(p=>p.name).join(', ')+'. Gå videre likevel?')) return; state.round++; save(); renderAll(); toast(roundStarter()+' starter denne runden'); });
+  $('nextRoundBtn').addEventListener('click',()=>{ const missing=state.players.filter(p=>!currentRoundRecord(p)); if(missing.length && !confirm('Mangler registrering for: '+missing.map(p=>p.name).join(', ')+'. Gå videre likevel?')) return; state.editingPlayer=null; state.round++; save(); renderAll(); toast(roundStarter()+' starter denne runden'); });
   $('finishGameBtn').addEventListener('click',()=>{ const done=state.players.some(p=>(p.phase||0)>=state.phases.length); if(confirm(done?'Fullføre spillet og vise resultatet?':'Avslutte og lagre dette spillet i statistikken?')) finishGame(); });
   $('matchupFilter').addEventListener('change',renderStats);
   $('themeBtn').textContent=darkMode?'Lys':'Mørk';
   $('themeBtn').addEventListener('click',()=>{ darkMode=!darkMode; document.body.classList.toggle('dark',darkMode); localStorage.setItem('phase10_dark_mode',darkMode?'1':'0'); $('themeBtn').textContent=darkMode?'Lys':'Mørk'; });
   $('wakeBtn').addEventListener('click',()=>{ if(wakeLock && !wakeLock.released) releaseWakeLock(); else requestWakeLock(); });
   $('finishStatsBtn').addEventListener('click',()=>showView('statsView'));
-  $('finishNewBtn').addEventListener('click',()=>{ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:5}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); });
+  $('finishNewBtn').addEventListener('click',()=>{ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:6}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); });
   $('importBtn').addEventListener('click',()=>$('importFile').click());
   $('importFile').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f)return; try{ const data=JSON.parse(await f.text()); if(!Array.isArray(data)) throw new Error(); if(confirm('Importere og erstatte eksisterende spillhistorikk?')){ archive=data; saveArchive(); renderStats(); toast('Historikken er importert'); } }catch{ alert('Filen kunne ikke leses.'); } e.target.value=''; });
   $('exportBtn').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(archive,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='phase10-statistikk.json'; a.click(); URL.revokeObjectURL(a.href); });
   $('resetBtn').addEventListener('click',()=>{
-    if(confirm('Starte et helt nytt spill?')){ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:5}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); }
+    if(confirm('Starte et helt nytt spill?')){ state={players:[],phases:[...classic],gameLength:10,round:1,usePoints:true,started:false,visualVersion:6}; save(); phaseMode.value='classic'; gameLength.value='10'; showView('setupView'); renderAll(); }
   });
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.view)));
 
