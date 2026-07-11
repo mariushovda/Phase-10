@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Phase Companion v2</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div><h1>Phase Companion <span>v2</span></h1><p id="subtitle">Testversjon</p></div>
+      <button id="wakeBtn" class="icon-btn" type="button">☀️ Skjerm på</button>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="hero card">
+          <div class="hero-mark">🎴</div>
+          <h2>Start et nytt spill</h2>
+          <p>Klassisk, balansert tilfeldig, hard eller familie.</p>
+          <button id="newGameBtn" class="btn primary wide">Nytt spill</button>
+          <button id="continueBtn" class="btn secondary wide hidden">Fortsett spill</button>
+        </div>
+        <div class="grid two">
+          <button class="menu-card" data-nav="statsView"><strong>📊 Statistikk</strong><span>Seiere, plassering og historikk</span></button>
+          <button class="menu-card" data-nav="libraryView"><strong>🃏 Fasebibliotek</strong><span>Se alle tilgjengelige faser</span></button>
+        </div>
+      </section>
+
+      <section id="setupView" class="view">
+        <div class="card">
+          <div class="section-head"><div><h2>Spillere</h2><p>Velg minst to.</p></div></div>
+          <div class="input-row"><input id="playerInput" type="text" placeholder="Navn"><button id="addPlayerBtn" class="btn primary">Legg til</button></div>
+          <div id="savedPlayers" class="chip-wrap"></div>
+          <div id="selectedPlayers" class="stack"></div>
+        </div>
+        <div class="card">
+          <h2>Spilloppsett</h2>
+          <label>Spillmodus<select id="modeSelect"><option value="classic">Klassisk</option><option value="balanced">Balansert tilfeldig</option><option value="hard">Hard</option><option value="family">Familie</option></select></label>
+          <label>Antall faser<select id="lengthSelect"><option value="10">10 faser</option><option value="5">5 faser</option></select></label>
+          <label class="toggle"><input id="pointsToggle" type="checkbox" checked><span>Registrer poeng</span></label>
+          <button id="previewBtn" class="btn secondary wide">Vis valgte faser</button>
+          <button id="startBtn" class="btn primary wide">Start spill</button>
+        </div>
+        <div id="phasePreview" class="card hidden"><h2>Valgte faser</h2><div id="previewList" class="phase-list"></div></div>
+      </section>
+
+      <section id="gameView" class="view">
+        <div class="card game-head">
+          <div><div class="eyebrow">RUNDE <span id="roundNo">1</span></div><h2 id="starterText">Starter: –</h2></div>
+          <div class="head-actions"><button id="undoRoundBtn" class="btn ghost">↶ Forrige runde</button><button id="quitBtn" class="btn danger">Avslutt</button></div>
+        </div>
+        <div id="playersGame" class="player-grid"></div>
+      </section>
+
+      <section id="finishView" class="view">
+        <div class="card center">
+          <div class="trophy">🏆</div><h2 id="winnerTitle">Vinner</h2><p id="winnerSub"></p>
+          <div id="podium" class="podium"></div>
+          <button id="saveFinishBtn" class="btn primary wide">Fullfør og lagre</button>
+          <button id="newFromFinishBtn" class="btn secondary wide">Nytt spill</button>
+        </div>
+      </section>
+
+      <section id="statsView" class="view">
+        <div class="card"><div class="section-head"><div><h2>Statistikk</h2><p>Lagret lokalt på denne enheten.</p></div><button id="exportBtn" class="btn ghost">Eksporter</button></div><div id="statsSummary" class="stat-grid"></div></div>
+        <div class="card"><h2>Spillere</h2><div id="playerStats"></div></div>
+        <div class="card"><h2>Historikk</h2><div id="historyList"></div></div>
+      </section>
+
+      <section id="libraryView" class="view"><div class="card"><h2>Fasebibliotek</h2><p>Fasene er merket med vanskelighetsgrad og brukes av den balanserte generatoren.</p><div id="libraryList" class="phase-list"></div></div></section>
+    </main>
+
+    <nav class="bottom-nav"><button data-nav="homeView" class="active">Hjem</button><button data-nav="gameView">Spill</button><button data-nav="statsView">Statistikk</button><button data-nav="libraryView">Faser</button></nav>
+  </div>
+
+  <dialog id="confirmDialog"><form method="dialog"><h3 id="dialogTitle">Kontroller</h3><p id="dialogText"></p><div class="dialog-actions"><button value="cancel" class="btn secondary">Endre</button><button value="confirm" class="btn primary">Registrer</button></div></form></dialog>
+  <div id="toast" class="toast"></div>
+
+  <script src="data/phases.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
