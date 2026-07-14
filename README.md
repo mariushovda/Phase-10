@@ -1,16 +1,12 @@
-# Phase Companion v2.4
+# Phase Companion v2.4.2
 
-Oppdateringer i denne versjonen:
-- Fast og tydelig bunnmeny med Spill, Faser, Statistikk, Historikk og Innstillinger.
-- Valg av minimum og maksimum vanskelighetsgrad med stjerner for ikke-klassiske spill.
-- Fasekort tilpasser seg mobil og nettbrett uten horisontal scrolling.
-- Wake Lock kan slås både på og av, og valget lagres.
-- Egen innstillingsside for automatisk neste runde og poengadvarsler.
-- Fasebibliotek med søk og typefilter, uten å legge til flere faser.
-- Litt bedre hjemskjerm med siste spill.
+Oppdateringer fra v2.4.1:
 
+- Poengregistreringen er beholdt uendret: skriv poeng direkte i feltet og velg Fullført eller Ikke fullført.
+- Grupper som betyr **samme farge** vises ensfarget og uten bokstav.
+- Sett og stigende rekker vises med bokstav og alle fire farger i hjørnene.
+- `+` vises mellom alle separate grupper, også foran stjernekort.
+- Ved kombinasjoner som «4 i samme farge + 2 like» vises bare fargegruppen ensfarget; de to like vises som vanlige flerfargede kort.
+- Et pågående spill beholdes når du går til Faser, Statistikk, Historikk eller Innstillinger. Trykk Spill i bunnmenyen for å gå rett tilbake.
 
-## v2.4.1
-- Gjeninnført kortdesign med fire tydelige hjørnefarger på kort uten fargekrav.
-- Gjeninnført og forbedret smart kontroll ved høy poengsum og «Fullført».
-- Varslet lar deg velge «Ikke fullført» direkte eller bekrefte «Ja, fullført».
+All annen spillflyt og registrering er beholdt fra v2.4.1.
