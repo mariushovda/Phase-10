@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Phase Companion v2.5</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="app-shell">
+<header class="topbar"><div><h1>Phase Companion <span>v2.5</span></h1><p id="subtitle">Dashboard, statistikk og detaljert historikk</p></div><button id="wakeQuickBtn" class="icon-btn" type="button" aria-pressed="false">☀️ Skjerm av</button></header>
+<main>
+<section id="homeView" class="view active">
+  <div id="activeGameCard" class="card active-game-card hidden"></div>
+  <div class="dashboard-hero card">
+    <div><div class="eyebrow">PHASE COMPANION</div><h2 id="greeting">Klar for neste spill?</h2><p>Start nytt, fortsett et pågående spill eller se utviklingen deres.</p></div>
+    <div class="dashboard-actions"><button id="newGameBtn" class="btn primary">Nytt spill</button><button id="continueBtn" class="btn secondary hidden">Fortsett spill</button></div>
+  </div>
+  <div id="homeStats" class="dashboard-grid"></div>
+  <div class="dashboard-columns">
+    <div class="card"><div class="section-head"><div><h2>Siste spill</h2><p>Det nyeste lagrede resultatet.</p></div><button class="btn ghost" data-nav="historyView">Historikk</button></div><div id="lastGame"></div></div>
+    <div class="card"><div class="section-head"><div><h2>Toppliste</h2><p>Flest seiere på denne enheten.</p></div><button class="btn ghost" data-nav="statsView">Statistikk</button></div><div id="homeLeader"></div></div>
+  </div>
+</section>
+<section id="setupView" class="view">
+  <div class="card"><div class="section-head"><div><h2>Spillere</h2><p>Velg minst to.</p></div></div><div class="input-row"><input id="playerInput" type="text" placeholder="Navn"><button id="addPlayerBtn" class="btn primary">Legg til</button></div><div id="savedPlayers" class="chip-wrap"></div><div id="selectedPlayers" class="stack"></div></div>
+  <div class="card"><h2>Spilloppsett</h2><label>Spillmodus<select id="modeSelect"><option value="classic">Klassisk</option><option value="balanced">Balansert tilfeldig</option><option value="hard">Hard</option><option value="family">Familie</option></select></label><label>Antall faser<select id="lengthSelect"><option value="10">10 faser</option><option value="5">5 faser</option></select></label><div id="difficultyPicker" class="difficulty-picker hidden"><div class="picker-head"><strong>Vanskelighetsgrad</strong><span id="difficultyLabel">⭐–⭐⭐⭐⭐⭐</span></div><div class="difficulty-row"><span>Fra</span><div id="minStars" class="star-selector"></div></div><div class="difficulty-row"><span>Til</span><div id="maxStars" class="star-selector"></div></div></div><label class="toggle"><input id="pointsToggle" type="checkbox" checked><span>Registrer poeng</span></label><button id="previewBtn" class="btn secondary wide">Vis valgte faser</button><button id="startBtn" class="btn primary wide">Start spill</button></div>
+  <div id="phasePreview" class="card hidden"><h2>Valgte faser</h2><div id="previewList" class="phase-list"></div></div>
+</section>
+<section id="gameView" class="view"><div class="card game-head"><div><div class="eyebrow">RUNDE <span id="roundNo">1</span></div><h2 id="starterText">Starter: –</h2></div><div class="head-actions"><button id="undoRoundBtn" class="btn ghost">↶ Forrige runde</button><button id="quitBtn" class="btn danger">Avslutt</button></div></div><div id="playersGame" class="player-grid"></div></section>
+<section id="finishView" class="view"><div class="card center"><div class="trophy">🏆</div><h2 id="winnerTitle">Vinner</h2><p id="winnerSub"></p><div id="podium" class="podium"></div><button id="saveFinishBtn" class="btn primary wide">Fullfør og lagre</button><button id="newFromFinishBtn" class="btn secondary wide">Nytt spill</button></div></section>
+<section id="statsView" class="view">
+  <div class="card"><div class="section-head"><div><h2>Statistikksenter</h2><p>Resultater fra spillene på denne enheten.</p></div><button id="exportBtn" class="btn ghost">Eksporter</button></div><div id="statsSummary" class="stat-grid"></div></div>
+  <div class="stats-tabs"><button class="chip active" data-stat-tab="players">Spillere</button><button class="chip" data-stat-tab="h2h">Head-to-head</button><button class="chip" data-stat-tab="groups">Spillergrupper</button></div>
+  <div id="playerStats" class="stats-panel"></div><div id="h2hStats" class="stats-panel hidden"></div><div id="groupStats" class="stats-panel hidden"></div>
+</section>
+<section id="historyView" class="view"><div class="card"><div class="section-head"><div><h2>Historikk</h2><p>Trykk på et spill for å se runder og resultater.</p></div></div><div id="historyList"></div></div></section>
+<section id="historyDetailView" class="view"><div class="card"><button id="historyBackBtn" class="btn ghost">← Til historikk</button><div id="historyDetail"></div></div></section>
+<section id="libraryView" class="view"><div class="card"><div class="section-head"><div><h2>Fasebibliotek</h2><p>Tilgjengelige faser.</p></div><span id="libraryCount" class="count-badge"></span></div><div class="library-tools"><input id="librarySearch" type="search" placeholder="Søk etter fase"><select id="libraryType"><option value="all">Alle typer</option><option value="set">Sett</option><option value="run">Rekke</option><option value="color">Farge</option><option value="star">Stjerne</option></select></div><div class="library-filters" id="libraryFilters"><button class="chip active" data-difficulty="all">Alle</button><button class="chip" data-difficulty="1">★</button><button class="chip" data-difficulty="2">★★</button><button class="chip" data-difficulty="3">★★★</button><button class="chip" data-difficulty="4">★★★★</button><button class="chip" data-difficulty="5">★★★★★</button></div><div id="libraryList" class="phase-list library-grid"></div></div></section>
+<section id="settingsView" class="view"><div class="card"><h2>Innstillinger</h2><div class="setting-row"><div><strong>Hold skjermen på</strong><p>Forhindrer at skjermen slår seg av under spill.</p></div><label class="switch"><input id="wakeToggle" type="checkbox"><span></span></label></div><div class="setting-row"><div><strong>Automatisk neste runde</strong><p>Går videre når alle spillere er registrert.</p></div><label class="switch"><input id="autoNextToggle" type="checkbox"><span></span></label></div><div class="setting-row"><div><strong>Bekreft uvanlig poengsum</strong><p>Viser kontrollspørsmål ved høy poengsum og fullført fase.</p></div><label class="switch"><input id="warningToggle" type="checkbox"><span></span></label></div></div></section>
+</main>
+<nav class="bottom-nav"><button data-nav="homeView" class="active"><span>🎮</span><small>Spill</small></button><button data-nav="libraryView"><span>🃏</span><small>Faser</small></button><button data-nav="statsView"><span>📊</span><small>Statistikk</small></button><button data-nav="historyView"><span>📜</span><small>Historikk</small></button><button data-nav="settingsView"><span>⚙️</span><small>Innstillinger</small></button></nav>
+</div>
+<dialog id="confirmDialog"><form method="dialog"><h3 id="dialogTitle">Kontroller</h3><p id="dialogText"></p><div class="dialog-actions"><button value="not-completed" class="btn secondary">Ikke fullført</button><button value="confirm" class="btn primary">Ja, fullført</button></div></form></dialog><div id="toast" class="toast"></div>
+<script src="data/phases.js"></script><script src="js/storage.js"></script><script src="js/game.js"></script><script src="js/stats.js"></script><script src="js/ui.js"></script><script src="js/app.js"></script>
+</body></html>

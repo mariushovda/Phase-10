@@ -1,0 +1,1 @@
+window.Store={get(k,f){try{const v=localStorage.getItem('pcv2_'+k);return v?JSON.parse(v):f}catch{return f}},set(k,v){localStorage.setItem('pcv2_'+k,JSON.stringify(v))},remove(k){localStorage.removeItem('pcv2_'+k)}};
