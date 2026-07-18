@@ -1,12 +1,21 @@
-# Phase Companion v2.5
+# Phase Companion v3.0 – Live Edition
 
-Oppdatert fra v2.4.2 uten å endre den stabile spillflyten.
+Denne versjonen bygger videre på den stabile v2.5-koden og beholder poengregistreringen uendret.
 
-Nytt:
-- Dashboard med pågående spill, siste spill, toppliste og nøkkeltall
-- Statistikksenter med spillerkort, seiersprosent, snittplassering, snittpoeng og beste streak
-- Head-to-head mellom spillere
-- Statistikk per spillergruppe
-- Historikk med detaljvisning av sluttresultat og alle registrerte runder
-- Datamodell merket med schemaVersion 2 og boardId for senere skylagring
-- Eksport inkluderer spillere og schemaVersion
+## Nytt i v3.0
+
+- Aktiv fullført-streak og bomstreak på spillerkortene
+- «Under press» ved fem eller flere bommer på rad
+- Live-knapp på spillsiden
+- Automatisk live-rangering etter fase og poeng
+- Faseutvikling og poengutvikling som grafer
+- Hendelseslogg for ny leder, streaks og comeback
+- Spillutmerkelser og automatisk spilloppsummering
+- Utvidet historikk med grafer, hendelser, utmerkelser og runder
+- Datamodell oppgradert til schemaVersion 3 og fortsatt klargjort for senere skylagring
+
+## Viktig
+
+Alle data lagres fortsatt lokalt i nettleseren. Eksisterende data fra v2.5 bruker samme lagringsnøkler og videreføres automatisk.
+
+Åpne `index.html` i nettleseren for å bruke appen.

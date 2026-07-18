@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#101827">
-  <title>Phase Companion v2.5</title>
+  <title>Phase Companion v3.0</title>
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 <div id="app" class="app-shell">
-<header class="topbar"><div><h1>Phase Companion <span>v2.5</span></h1><p id="subtitle">Dashboard, statistikk og detaljert historikk</p></div><button id="wakeQuickBtn" class="icon-btn" type="button" aria-pressed="false">☀️ Skjerm av</button></header>
+<header class="topbar"><div><h1>Phase Companion <span>v3.0</span></h1><p id="subtitle">Live oversikt, streaks, rekorder og spillhistorie</p></div><button id="wakeQuickBtn" class="icon-btn" type="button" aria-pressed="false">☀️ Skjerm av</button></header>
 <main>
 <section id="homeView" class="view active">
   <div id="activeGameCard" class="card active-game-card hidden"></div>
@@ -28,8 +28,8 @@
   <div class="card"><h2>Spilloppsett</h2><label>Spillmodus<select id="modeSelect"><option value="classic">Klassisk</option><option value="balanced">Balansert tilfeldig</option><option value="hard">Hard</option><option value="family">Familie</option></select></label><label>Antall faser<select id="lengthSelect"><option value="10">10 faser</option><option value="5">5 faser</option></select></label><div id="difficultyPicker" class="difficulty-picker hidden"><div class="picker-head"><strong>Vanskelighetsgrad</strong><span id="difficultyLabel">⭐–⭐⭐⭐⭐⭐</span></div><div class="difficulty-row"><span>Fra</span><div id="minStars" class="star-selector"></div></div><div class="difficulty-row"><span>Til</span><div id="maxStars" class="star-selector"></div></div></div><label class="toggle"><input id="pointsToggle" type="checkbox" checked><span>Registrer poeng</span></label><button id="previewBtn" class="btn secondary wide">Vis valgte faser</button><button id="startBtn" class="btn primary wide">Start spill</button></div>
   <div id="phasePreview" class="card hidden"><h2>Valgte faser</h2><div id="previewList" class="phase-list"></div></div>
 </section>
-<section id="gameView" class="view"><div class="card game-head"><div><div class="eyebrow">RUNDE <span id="roundNo">1</span></div><h2 id="starterText">Starter: –</h2></div><div class="head-actions"><button id="undoRoundBtn" class="btn ghost">↶ Forrige runde</button><button id="quitBtn" class="btn danger">Avslutt</button></div></div><div id="playersGame" class="player-grid"></div></section>
-<section id="finishView" class="view"><div class="card center"><div class="trophy">🏆</div><h2 id="winnerTitle">Vinner</h2><p id="winnerSub"></p><div id="podium" class="podium"></div><button id="saveFinishBtn" class="btn primary wide">Fullfør og lagre</button><button id="newFromFinishBtn" class="btn secondary wide">Nytt spill</button></div></section>
+<section id="gameView" class="view"><div class="card game-head"><div><div class="eyebrow">RUNDE <span id="roundNo">1</span></div><h2 id="starterText">Starter: –</h2></div><div class="head-actions"><button id="liveBtn" class="btn live-btn">📊 Live</button><button id="undoRoundBtn" class="btn ghost">↶ Forrige runde</button><button id="quitBtn" class="btn danger">Avslutt</button></div></div><div id="playersGame" class="player-grid"></div></section>
+<section id="finishView" class="view"><div class="card center"><div class="trophy">🏆</div><h2 id="winnerTitle">Vinner</h2><p id="winnerSub"></p><div id="podium" class="podium"></div><div id="gameAwards" class="awards-grid"></div><div id="finishStory" class="finish-story"></div><button id="saveFinishBtn" class="btn primary wide">Fullfør og lagre</button><button id="newFromFinishBtn" class="btn secondary wide">Nytt spill</button></div></section>
 <section id="statsView" class="view">
   <div class="card"><div class="section-head"><div><h2>Statistikksenter</h2><p>Resultater fra spillene på denne enheten.</p></div><button id="exportBtn" class="btn ghost">Eksporter</button></div><div id="statsSummary" class="stat-grid"></div></div>
   <div class="stats-tabs"><button class="chip active" data-stat-tab="players">Spillere</button><button class="chip" data-stat-tab="h2h">Head-to-head</button><button class="chip" data-stat-tab="groups">Spillergrupper</button></div>
@@ -42,6 +42,8 @@
 </main>
 <nav class="bottom-nav"><button data-nav="homeView" class="active"><span>🎮</span><small>Spill</small></button><button data-nav="libraryView"><span>🃏</span><small>Faser</small></button><button data-nav="statsView"><span>📊</span><small>Statistikk</small></button><button data-nav="historyView"><span>📜</span><small>Historikk</small></button><button data-nav="settingsView"><span>⚙️</span><small>Innstillinger</small></button></nav>
 </div>
+<div id="liveOverlay" class="live-overlay hidden" aria-hidden="true"><div class="live-backdrop" data-close-live></div><section class="live-sheet" role="dialog" aria-modal="true" aria-labelledby="liveTitle"><div class="sheet-handle"></div><div class="live-head"><div><div class="eyebrow">LIVE</div><h2 id="liveTitle">Live oversikt</h2></div><button id="closeLiveBtn" class="icon-btn" type="button">Lukk</button></div><div id="liveRanking" class="live-ranking"></div><div class="chart-card"><div class="chart-title"><strong>Faseutvikling</strong><span>Runde for runde</span></div><div id="phaseChart" class="svg-chart"></div></div><div class="chart-card"><div class="chart-title"><strong>Poengutvikling</strong><span>Lavest er best</span></div><div id="scoreChart" class="svg-chart"></div></div><div class="chart-card"><div class="chart-title"><strong>Siste hendelser</strong><span>Historien i spillet</span></div><div id="liveEvents" class="event-list"></div></div></section></div>
+<div id="celebration" class="celebration hidden" aria-live="polite"></div>
 <dialog id="confirmDialog"><form method="dialog"><h3 id="dialogTitle">Kontroller</h3><p id="dialogText"></p><div class="dialog-actions"><button value="not-completed" class="btn secondary">Ikke fullført</button><button value="confirm" class="btn primary">Ja, fullført</button></div></form></dialog><div id="toast" class="toast"></div>
 <script src="data/phases.js"></script><script src="js/storage.js"></script><script src="js/game.js"></script><script src="js/stats.js"></script><script src="js/ui.js"></script><script src="js/app.js"></script>
 </body></html>
